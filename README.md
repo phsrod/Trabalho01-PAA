@@ -36,8 +36,8 @@ Avaliar comparativamente algoritmos de ordenação, considerando desempenho, com
 
 | Item | Especificação |
 |------|---------------|
-| **Linguagem** | *[]* |
-| **Sistema Operacional** | *[]* |
+| **Linguagem** | *[C]* |
+| **Sistema Operacional** | *[WSL]* |
 | **Hardware** | *[]* |
 | **IDE/Editor** | *[VSCode]* |
 
@@ -53,17 +53,17 @@ Avaliar comparativamente algoritmos de ordenação, considerando desempenho, com
 x -> para marcar
 
 ### 🔧 Implementação
-- [ ] Escolher linguagem e configurar ambiente
-- [ ] Implementar Algoritmo A (Grupo A)
+- [x] Escolher linguagem e configurar ambiente
+- [x] Implementar Algoritmo A (Grupo A)
 - [ ] Implementar Algoritmo B (Grupo B)
-- [ ] Criar função de geração de vetores (crescente, decrescente, aleatório)
-- [ ] Implementar medição precisa de tempo de execução
+- [x] Criar função de geração de vetores (crescente, decrescente, aleatório)
+- [x] Implementar medição precisa de tempo de execução
 - [ ] Modularizar e documentar o código
-- [ ] Testar cada algoritmo com vetores pequenos (ex: 10 elementos)
+- [x] Testar cada algoritmo com vetores pequenos (ex: 10 elementos)
 
 ### 🧪 Testes e Coleta de Dados
-- [ ] Definir tamanhos de vetores (ex: 20k, 40k, 60k)
-- [ ] Criar scripts para execução automatizada dos testes
+- [x] Definir tamanhos de vetores (ex: 20k, 40k, 60k)
+- [x] Criar scripts para execução automatizada dos testes
 - [ ] Executar cada cenário 5 vezes:
   - [ ] Vetor crescente
   - [ ] Vetor decrescente
@@ -135,7 +135,7 @@ x -> para marcar
 ---
 
 **📌 Atualizado em:** *[07/01/2025]*
-**✅ Progresso atual:** *[0%]*  
+**✅ Progresso atual:** *[1%]*  
 
 ---
 
