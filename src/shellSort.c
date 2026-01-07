@@ -5,16 +5,31 @@
 #include <math.h>
 
 /*  ============================ CONSTANTES ===========================*/
-#define TAM_VETOR 10        /* Altere para 40000 ou 60000 */
+#define TAM_VETOR 20000        /* Altere para 40000 ou 60000 */
 #define REPETICOES 10       /* Altere a quantidade de repetições */
-#define TAM_MAX 1000000  /* valor máximo dos elementos do vetor */
-#define SALTO_MAX 50      /* valor máximo do salto entre elementos */
+#define TAM_MAX 1000000         /* valor máximo dos elementos do vetor */
 
 /* ================= FUNÇÕES AUXILIARES ================= */
-void copiarVetor(int origem[], int destino[]) {
-    int i;
-    for (i = 0; i < TAM_VETOR; i++)
-        destino[i] = origem[i];
+#include <stdio.h>
+#include <stdlib.h>
+
+#ifdef _WIN32
+    #define limpar_tela() system("cls")
+#else
+    #define limpar_tela() system("clear")
+#endif
+
+void pausar() {
+    printf("\nPressione ENTER para continuar...");
+    getchar(); // consome \n pendente
+    getchar(); // espera ENTER
+}
+
+int confirmar(const char *mensagem) {
+    char op;
+    printf("\n%s (s/n): ", mensagem);
+    scanf(" %c", &op);
+    return (op == 's' || op == 'S');
 }
 
 /* ================= FUNÇÃO DE IMPRESSÃO ================= */
@@ -34,40 +49,62 @@ void imprimirVetor(int v[]) {
     printf("\n");
 }
 
-/* ======================= GERAR BASE DE NÚMEROS =================*/
-int gerarValorAleatorio() {
-    return rand() % TAM_MAX;
+/* ================= FUNÇÃO SHUFFLE ================= */
+void shuffle(int v[], int n) {
+    int i, j, temp;
+    for (i = n - 1; i > 0; i--) {
+        j = rand() % (i + 1);
+        temp = v[i];
+        v[i] = v[j];
+        v[j] = temp;
+    }
 }
-
 
 /* ================= GERAÇÃO DE VETORES ================= */
 void gerarVetor(int v[], int tipo) {
     int i;
-    int valor;
-
-    /* Primeiro elemento: sempre aceita */
-    v[0] = gerarValorAleatorio();
-
-    /* Preenche o restante */
-    for (i = 1; i < TAM_VETOR; i++) {
-
-        valor = gerarValorAleatorio();
-
-        if (tipo == 1) {
-            /* Crescente */
-            while (valor < v[i - 1]) {
-                valor = gerarValorAleatorio();
+    
+    if (tipo == 1) {
+        /* CRESCENTE - números crescentes dentro de TAM_MAX */
+        int valor = rand() % (TAM_MAX / 10);  // Começa baixo
+        
+        for (i = 0; i < TAM_VETOR; i++) {
+            v[i] = valor;
+            // Incremento controlado para não ultrapassar TAM_MAX
+            int incremento = 1 + (rand() % (TAM_MAX / TAM_VETOR));
+            valor += incremento;
+            
+            // Garante que não ultrapasse TAM_MAX
+            if (valor > TAM_MAX) {
+                valor = TAM_MAX - (rand() % (TAM_MAX / 10));
             }
         }
-        else if (tipo == 2) {
-            /* Decrescente */
-            while (valor > v[i - 1]) {
-                valor = gerarValorAleatorio();
+    }
+    else if (tipo == 2) {
+        /* DECRESCENTE - números decrescentes dentro de TAM_MAX */
+        // Começa com valor alto, mas dentro de TAM_MAX
+        int valor = TAM_MAX - (rand() % (TAM_MAX / 10));
+        
+        for (i = 0; i < TAM_VETOR; i++) {
+            v[i] = valor;
+            // Decremento controlado
+            int decremento = 1 + (rand() % (TAM_MAX / TAM_VETOR));
+            valor -= decremento;
+            
+            // Garante que não fique negativo
+            if (valor < 0) {
+                valor = rand() % (TAM_MAX / 10);
             }
         }
-        /* Aleatório não tem restrição */
-
-        v[i] = valor;
+    }
+    else if (tipo == 3) {
+        /* ALEATÓRIO - dentro de TAM_MAX */
+        for (i = 0; i < TAM_VETOR; i++) {
+            v[i] = rand() % TAM_MAX;
+        }
+        
+        // Embaralha o vetor para garantir aleatoriedade, pode colocar em laço se desejar mais aleatoriedade
+        shuffle(v, TAM_VETOR);
     }
 }
 
@@ -156,14 +193,7 @@ double calcularMediaTrocas(long trocas[]) {
 }
 
 /* ================= ARQUIVO ================= */
-void salvarResultados(char tipo[],
-                      double tempos[],
-                      long comparacoes[],
-                      long trocas[],
-                      double mediaTempo,
-                      double desvioTempo,
-                      double mediaComparacoes,
-                      double mediaTrocas) {
+void salvarResultados(char tipo[], double tempos[], long comparacoes[], long trocas[], double mediaTempo, double desvioTempo, double mediaComparacoes, double mediaTrocas) {
 
     FILE *arquivo;
     time_t agora;
@@ -233,53 +263,25 @@ void salvarResultados(char tipo[],
 int menu() {
     int opcao;
 
-    printf("\n=== SHELL SORT ===\n");
-    printf("1 - Vetor Crescente\n");
-    printf("2 - Vetor Decrescente\n");
-    printf("3 - Vetor Aleatorio\n");
-    printf("0 - Sair\n");
-    printf("Escolha: ");
+    limpar_tela();
+    printf("=====================================\n");
+    printf("         SHELL SORT - MENU            \n");
+    printf("=====================================\n");
+    printf(" 1 - Vetor Crescente\n");
+    printf(" 2 - Vetor Decrescente\n");
+    printf(" 3 - Vetor Aleatório\n");
+    printf(" 0 - Sair\n");
+    printf("=====================================\n");
+    printf(" Escolha uma opção: ");
     scanf("%d", &opcao);
 
     return opcao;
 }
 
-/* ================= MAIN ================= */
-int main() {
-    int base[TAM_MAX];
-    int vetor[TAM_VETOR];
-
-    double tempos[REPETICOES];
-    long comparacoes[REPETICOES];
-    long trocas[REPETICOES];
-
-    struct timespec inicio, fim;
-
-    int opcao;
-    int i;
-
-    srand(time(NULL));
-
-    opcao = menu();
-    if (opcao == 0)
-        return 0;
-
-    for (i = 0; i < REPETICOES; i++) {
-        gerarVetor(vetor, opcao);
-
-        printf("\nExecução %d:\n", i + 1);
-        printf("Vetor antes da ordenacao:\n");
-        imprimirVetor(vetor);
-
-        clock_gettime(CLOCK_MONOTONIC, &inicio);
-        shellSort(vetor, &comparacoes[i], &trocas[i]);
-        clock_gettime(CLOCK_MONOTONIC, &fim);
-
-        tempos[i] = medirTempo(inicio, fim);
-
-        printf("\nVetor apos a ordenacao:\n");
-        imprimirVetor(vetor);
-    }
+void processarResultados(int opcao,
+                          double tempos[],
+                          long comparacoes[],
+                          long trocas[]) {
 
     double media = calcularMedia(tempos);
     double desvio = calcularDesvioPadrao(tempos, media);
@@ -287,11 +289,98 @@ int main() {
     double mediaTrocas = calcularMediaTrocas(trocas);
 
     if (opcao == 1)
-        salvarResultados("crescente", tempos, comparacoes, trocas, media, desvio, mediaComparacoes, mediaTrocas);
+        salvarResultados("crescente", tempos, comparacoes, trocas,
+                         media, desvio, mediaComparacoes, mediaTrocas);
     else if (opcao == 2)
-        salvarResultados("decrescente", tempos, comparacoes, trocas, media, desvio, mediaComparacoes, mediaTrocas);
+        salvarResultados("decrescente", tempos, comparacoes, trocas,
+                         media, desvio, mediaComparacoes, mediaTrocas);
     else
-        salvarResultados("aleatorio", tempos, comparacoes, trocas, media, desvio, mediaComparacoes, mediaTrocas);
+        salvarResultados("aleatorio", tempos, comparacoes, trocas,
+                         media, desvio, mediaComparacoes, mediaTrocas);
+
+    printf("\nResultados salvos com sucesso!\n");
+    pausar();
+}
+
+void executarExperimento(int opcao,
+                          double tempos[],
+                          long comparacoes[],
+                          long trocas[]) {
+
+    int vetor[TAM_VETOR];
+    struct timespec inicio, fim;
+
+    for (int i = 0; i < REPETICOES; i++) {
+
+        gerarVetor(vetor, opcao);
+        
+        printf("=====================================\n");
+        printf(" Execução %d\n", i + 1);
+        printf("=====================================\n");
+
+        printf("Vetor antes da ordenação:\n");
+        imprimirVetor(vetor);
+        
+        clock_gettime(CLOCK_MONOTONIC, &inicio);
+        shellSort(vetor, &comparacoes[i], &trocas[i]);
+        clock_gettime(CLOCK_MONOTONIC, &fim);
+        
+        tempos[i] = medirTempo(inicio, fim);
+        
+        printf("\nVetor após a ordenação:\n");
+        imprimirVetor(vetor);
+    }
+    pausar();
+    limpar_tela();
+}
+
+void executarOpcao(int opcao) {
+
+    double tempos[REPETICOES];
+    long comparacoes[REPETICOES];
+    long trocas[REPETICOES];
+
+    limpar_tela();
+    printf("Opção selecionada: %d\n", opcao);
+
+    if (confirmar("Deseja iniciar a execução?")) {
+        executarExperimento(opcao, tempos, comparacoes, trocas);
+        processarResultados(opcao, tempos, comparacoes, trocas);
+    }
+}
+
+
+int main() {
+    int opcao;
+    int executando = 1;
+
+    srand(time(NULL));
+
+    while (executando) {
+
+        opcao = menu();
+
+        switch (opcao) {
+
+            case 0:
+                limpar_tela();
+                printf("Encerrando o programa...\n");
+                pausar();
+                executando = 0;
+                break;
+
+            case 1:
+            case 2:
+            case 3:
+                executarOpcao(opcao);
+                break;
+
+            default:
+                limpar_tela();
+                printf("Opção inválida!\n");
+                pausar();
+        }
+    }
 
     return 0;
 }

@@ -3,3 +3,4 @@ output/
 *.exe
 shellSort
 cycleSort
+results/
