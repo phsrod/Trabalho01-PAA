@@ -7,20 +7,8 @@
 /*  ============================ CONSTANTES ===========================*/
 #define TAM_VETOR 10        /* Altere para 40000 ou 60000 */
 #define REPETICOES 10       /* Altere a quantidade de repetições */
-#define INICIO_INTERVALO 1  /* Altere o início do intervalo */
-#define FIM_INTERVALO 10  /* Altere o fim do intervalo */
-
-/*  ============================ PROTÓTIPOS ===========================*/
-
-/* ==================== VERIFICAÇÃO DO INTERVALO ======================*/
-int verificarIntervalo(){
-    int ehValido = 1, tamanhoIntervalo = FIM_INTERVALO - INICIO_INTERVALO + 1;
-    if (tamanhoIntervalo != TAM_VETOR){
-        printf("Erro: O tamanho do intervalo (%d) não corresponde ao tamanho do vetor (%d).\n", tamanhoIntervalo, TAM_VETOR);
-        ehValido = 0;
-    }
-    return ehValido;
-}
+#define TAM_MAX 1000000  /* valor máximo dos elementos do vetor */
+#define SALTO_MAX 50      /* valor máximo do salto entre elementos */
 
 /* ================= FUNÇÕES AUXILIARES ================= */
 void copiarVetor(int origem[], int destino[]) {
@@ -46,76 +34,45 @@ void imprimirVetor(int v[]) {
     printf("\n");
 }
 
+/* ======================= GERAR BASE DE NÚMEROS =================*/
+int gerarValorAleatorio() {
+    return rand() % TAM_MAX;
+}
+
+
 /* ================= GERAÇÃO DE VETORES ================= */
-void gerarCrescente(int v[]) {
+void gerarVetor(int v[], int tipo) {
     int i;
-    int valor = INICIO_INTERVALO;
+    int valor;
 
-    for (i = 0; i < TAM_VETOR; i++) {
+    /* Primeiro elemento: sempre aceita */
+    v[0] = gerarValorAleatorio();
+
+    /* Preenche o restante */
+    for (i = 1; i < TAM_VETOR; i++) {
+
+        valor = gerarValorAleatorio();
+
+        if (tipo == 1) {
+            /* Crescente */
+            while (valor < v[i - 1]) {
+                valor = gerarValorAleatorio();
+            }
+        }
+        else if (tipo == 2) {
+            /* Decrescente */
+            while (valor > v[i - 1]) {
+                valor = gerarValorAleatorio();
+            }
+        }
+        /* Aleatório não tem restrição */
+
         v[i] = valor;
-        valor++;
     }
 }
 
-void gerarDecrescente(int v[]) {
-    int i;
-    int valor = FIM_INTERVALO;
-
-    for (i = 0; i < TAM_VETOR; i++) {
-        v[i] = valor, valor--;
-    }
-}
-
-void gerarAleatorio(int v[]) {
-    int i;
-    int j;
-    int temp;
-
-    gerarCrescente(v);
-
-    /* Fisher-Yates Shuffle */
-    for (i = TAM_VETOR - 1; i > 0; i--) {
-        j = rand() % (i + 1);
-        temp = v[i];
-        v[i] = v[j];
-        v[j] = temp;
-    }
-}
 
 /* ================= SHELL SORT (KNUTH 3k+1) ================= */
-// void shellSort(int v[], long *comparacoes, long *trocas) {
-//     int gap = 1;
-//     int i, j, temp;
-//     int continuar;
-
-//     *comparacoes = 0;
-//     *trocas = 0;
-
-//     while (gap < TAM_VETOR / 3)
-//         gap = 3 * gap + 1;
-
-//     while (gap >= 1) {
-//         for (i = gap; i < TAM_VETOR; i++) {
-//             temp = v[i];
-//             j = i;
-//             continuar = 1;
-
-//             while (j >= gap && continuar) {
-//                 (*comparacoes)++;
-//                 if (v[j - gap] > temp) {
-//                     v[j] = v[j - gap];
-//                     (*trocas)++;
-//                     j = j - gap;
-//                 } else {
-//                     continuar = 0;
-//                 }
-//             }
-//             v[j] = temp;
-//         }
-//         gap = gap / 3;
-//     }
-// }
-
 void shellSort(int v[], long *comparacoes, long *trocas) {
     int i, j, aux;
     int continuar;
@@ -151,10 +108,8 @@ void shellSort(int v[], long *comparacoes, long *trocas) {
     }
 }
 
-
-
 /* ================= TEMPO ====================*/
-double medirTempo(struct timespec inicio, struct timespec fim){
+double medirTempo(struct timespec inicio, struct timespec fim) {
     double segundos, nanos;
     segundos = fim.tv_sec - inicio.tv_sec;
     nanos = fim.tv_nsec - inicio.tv_nsec;
@@ -162,57 +117,115 @@ double medirTempo(struct timespec inicio, struct timespec fim){
 }
 
 /* ================= ESTATÍSTICAS =============*/
-double calcularMedia(double tempos[]){
+double calcularMedia(double tempos[]) {
     double soma = 0.0;
-    for (int i = 0; i < REPETICOES; i++){
+    int i;
+    for (i = 0; i < REPETICOES; i++)
         soma += tempos[i];
-    }
     return soma / REPETICOES;
 }
 
-double calcularDesvioPadrao(double tempos[], double media){
+double calcularDesvioPadrao(double tempos[], double media) {
     double soma = 0.0;
-    for (int i = 0; i < REPETICOES; i++){
+    int i;
+    for (i = 0; i < REPETICOES; i++)
         soma += pow(tempos[i] - media, 2);
-    }
     return sqrt(soma / REPETICOES);
 }
 
+double calcularMediaComparacoes(long comparacoes[]) {
+    long soma = 0;
+    int i;
+
+    for (i = 0; i < REPETICOES; i++) {
+        soma += comparacoes[i];
+    }
+
+    return (double)soma / REPETICOES;
+}
+
+double calcularMediaTrocas(long trocas[]) {
+    long soma = 0;
+    int i;
+
+    for (i = 0; i < REPETICOES; i++) {
+        soma += trocas[i];
+    }
+
+    return (double)soma / REPETICOES;
+}
+
 /* ================= ARQUIVO ================= */
-void salvarResultados(char tipo[], double tempos[], long comparacoes[], long trocas[], double media, double desvio){
+void salvarResultados(char tipo[],
+                      double tempos[],
+                      long comparacoes[],
+                      long trocas[],
+                      double mediaTempo,
+                      double desvioTempo,
+                      double mediaComparacoes,
+                      double mediaTrocas) {
+
     FILE *arquivo;
     time_t agora;
     struct tm *info;
-    char nomeArquivo[100];
+    char nomeArquivo[150];
     int i;
+
     time(&agora);
     info = localtime(&agora);
 
-    sprintf(nomeArquivo, "../results/shellsort_%s_%02d-%02d-%04d_%02d-%02d-%02d.txt", tipo, info->tm_mday, info->tm_mon + 1, info->tm_year + 1900, info->tm_hour, info->tm_min, info->tm_sec);
+    sprintf(nomeArquivo,
+            "../results/shellsort_%s_%02d-%02d-%04d_%02d-%02d-%02d.txt",
+            tipo,
+            info->tm_mday,
+            info->tm_mon + 1,
+            info->tm_year + 1900,
+            info->tm_hour,
+            info->tm_min,
+            info->tm_sec);
+
     arquivo = fopen(nomeArquivo, "w");
     if (arquivo == NULL) {
         printf("Erro ao criar o arquivo de resultados.\n");
         return;
-    } else{
-        //fprintf(arquivo, "Shell Sort - Sequencia de Knuth (3k+1)\n");
-        fprintf(arquivo, "Shell Sort - Sequencia de Knuth Clássica\n");
-        fprintf(arquivo, "Tamanho do vetor: %d\n", TAM_VETOR);
-        fprintf(arquivo, "Intervalo: [%d, %d]\n", INICIO_INTERVALO, FIM_INTERVALO);
-        fprintf(arquivo, "Repeticoes: %d\n\n", REPETICOES);
+    }
 
-        for (i = 0; i < REPETICOES; i++) {
-        fprintf(arquivo, "Execucao %d\n", i + 1);
-        fprintf(arquivo, "Tempo: %.3f ms\n", tempos[i]);
-        fprintf(arquivo, "Comparacoes: %ld\n", comparacoes[i]);
-        fprintf(arquivo, "Trocas: %ld\n\n", trocas[i]);
-        }
-        fprintf(arquivo, "Tempo medio: %.3f ms\n", media);
-        fprintf(arquivo, "Desvio padrao: %.3f ms\n", desvio);
+    /* ================= CABECALHO ================= */
+    fprintf(arquivo, "============================================================\n");
+    fprintf(arquivo, "               SHELL SORT - SEQUENCIA DE KNUTH               \n");
+    fprintf(arquivo, "============================================================\n\n");
 
-        fclose(arquivo);
+    fprintf(arquivo, "Configuracoes do experimento:\n");
+    fprintf(arquivo, "------------------------------------------------------------\n");
+    fprintf(arquivo, "Tamanho do vetor : %d\n", TAM_VETOR);
+    fprintf(arquivo, "Repeticoes       : %d\n", REPETICOES);
+    fprintf(arquivo, "Tipo de vetor    : %s\n\n", tipo);
 
-        printf("\nResultados salvos em: %s\n", nomeArquivo);
-    }  
+    /* ================= RESULTADOS POR EXECUCAO ================= */
+    fprintf(arquivo, "Resultados individuais:\n");
+    fprintf(arquivo, "------------------------------------------------------------\n");
+
+    for (i = 0; i < REPETICOES; i++) {
+        fprintf(arquivo, "Execucao %2d\n", i + 1);
+        fprintf(arquivo, "  Tempo        : %8.3f ms\n", tempos[i]);
+        fprintf(arquivo, "  Comparacoes  : %8ld\n", comparacoes[i]);
+        fprintf(arquivo, "  Trocas       : %8ld\n\n", trocas[i]);
+    }
+
+    /* ================= ESTATISTICAS ================= */
+    fprintf(arquivo, "Resumo estatistico:\n");
+    fprintf(arquivo, "------------------------------------------------------------\n");
+    fprintf(arquivo, "Tempo medio           : %.3f ms\n", mediaTempo);
+    fprintf(arquivo, "Desvio padrao (tempo) : %.3f ms\n\n", desvioTempo);
+
+    fprintf(arquivo, "Media de comparacoes  : %.2f\n", mediaComparacoes);
+    fprintf(arquivo, "Media de trocas       : %.2f\n", mediaTrocas);
+
+    fprintf(arquivo, "\n============================================================\n");
+
+    fclose(arquivo);
+
+    printf("\nResultados salvos em: %s\n", nomeArquivo);
 }
 
 
@@ -233,8 +246,8 @@ int menu() {
 
 /* ================= MAIN ================= */
 int main() {
-    int vetorOriginal[TAM_VETOR];
-    int vetorTeste[TAM_VETOR];
+    int base[TAM_MAX];
+    int vetor[TAM_VETOR];
 
     double tempos[REPETICOES];
     long comparacoes[REPETICOES];
@@ -245,54 +258,40 @@ int main() {
     int opcao;
     int i;
 
-    if (!verificarIntervalo()){
-        return 0;
-    }
-    
     srand(time(NULL));
 
     opcao = menu();
     if (opcao == 0)
         return 0;
 
-    if (opcao == 1)
-        gerarCrescente(vetorOriginal);
-    else if (opcao == 2)
-        gerarDecrescente(vetorOriginal);
-    else if (opcao == 3)
-        gerarAleatorio(vetorOriginal);
-    else
-        return 0;
-
-    printf("\nVetor antes da ordenacao:\n");
-    imprimirVetor(vetorOriginal);
-
     for (i = 0; i < REPETICOES; i++) {
-        copiarVetor(vetorOriginal, vetorTeste);
+        gerarVetor(vetor, opcao);
+
+        printf("\nExecução %d:\n", i + 1);
+        printf("Vetor antes da ordenacao:\n");
+        imprimirVetor(vetor);
 
         clock_gettime(CLOCK_MONOTONIC, &inicio);
-        shellSort(vetorTeste, &comparacoes[i], &trocas[i]);
+        shellSort(vetor, &comparacoes[i], &trocas[i]);
         clock_gettime(CLOCK_MONOTONIC, &fim);
 
         tempos[i] = medirTempo(inicio, fim);
-    }
 
-    printf("\nVetor apos a ordenacao:\n");
-    imprimirVetor(vetorTeste);
+        printf("\nVetor apos a ordenacao:\n");
+        imprimirVetor(vetor);
+    }
 
     double media = calcularMedia(tempos);
     double desvio = calcularDesvioPadrao(tempos, media);
+    double mediaComparacoes = calcularMediaComparacoes(comparacoes);
+    double mediaTrocas = calcularMediaTrocas(trocas);
 
     if (opcao == 1)
-        salvarResultados("crescente", tempos, comparacoes, trocas, media, desvio);
+        salvarResultados("crescente", tempos, comparacoes, trocas, media, desvio, mediaComparacoes, mediaTrocas);
     else if (opcao == 2)
-        salvarResultados("decrescente", tempos, comparacoes, trocas, media, desvio);
+        salvarResultados("decrescente", tempos, comparacoes, trocas, media, desvio, mediaComparacoes, mediaTrocas);
     else
-        salvarResultados("aleatorio", tempos, comparacoes, trocas, media, desvio);
+        salvarResultados("aleatorio", tempos, comparacoes, trocas, media, desvio, mediaComparacoes, mediaTrocas);
 
     return 0;
 }
-
-
-
-
