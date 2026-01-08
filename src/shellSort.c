@@ -5,9 +5,9 @@
 #include <math.h>
 
 /*  ============================ CONSTANTES ===========================*/
-#define TAM_VETOR 20000        /* Altere para 40000 ou 60000 */
+#define TAM_VETOR 20000       /* Altere para 40000 ou 60000 */
 #define REPETICOES 10       /* Altere a quantidade de repetições */
-#define TAM_MAX 1000000         /* valor máximo dos elementos do vetor */
+#define TAM_MAX 100000       /* valor máximo dos elementos do vetor */
 
 /* ================= FUNÇÕES AUXILIARES ================= */
 #include <stdio.h>
@@ -109,7 +109,7 @@ void gerarVetor(int v[], int tipo) {
 }
 
 
-/* ================= SHELL SORT (KNUTH 3k+1) ================= */
+/* ================= SHELL SORT - SEQUENCIA DE KNUTH ================= */
 void shellSort(int v[], long *comparacoes, long *trocas) {
     int i, j, aux;
     int continuar;
@@ -278,10 +278,7 @@ int menu() {
     return opcao;
 }
 
-void processarResultados(int opcao,
-                          double tempos[],
-                          long comparacoes[],
-                          long trocas[]) {
+void processarResultados(int opcao, double tempos[], long comparacoes[], long trocas[]) {
 
     double media = calcularMedia(tempos);
     double desvio = calcularDesvioPadrao(tempos, media);
@@ -302,10 +299,7 @@ void processarResultados(int opcao,
     pausar();
 }
 
-void executarExperimento(int opcao,
-                          double tempos[],
-                          long comparacoes[],
-                          long trocas[]) {
+void executarExperimento(int opcao, double tempos[], long comparacoes[], long trocas[]) {
 
     int vetor[TAM_VETOR];
     struct timespec inicio, fim;
@@ -330,8 +324,6 @@ void executarExperimento(int opcao,
         printf("\nVetor após a ordenação:\n");
         imprimirVetor(vetor);
     }
-    pausar();
-    limpar_tela();
 }
 
 void executarOpcao(int opcao) {

@@ -12,7 +12,7 @@
 
 | Nome | Responsabilidade |
 |------|------------------|
-| *[luciano Sousa Barbosa]* | |
+| *[Luciano Sousa Barbosa]* | |
 | *[Pedro Henrique Silva Rodrigues]* | |
 | *[Tiago Lima de Moura]* | |
 
@@ -55,7 +55,7 @@ x -> para marcar
 ### 🔧 Implementação
 - [x] Escolher linguagem e configurar ambiente
 - [x] Implementar Algoritmo A (Grupo A)
-- [ ] Implementar Algoritmo B (Grupo B)
+- [x] Implementar Algoritmo B (Grupo B)
 - [x] Criar função de geração de vetores (crescente, decrescente, aleatório)
 - [x] Implementar medição precisa de tempo de execução
 - [ ] Modularizar e documentar o código
@@ -68,8 +68,8 @@ x -> para marcar
   - [ ] Vetor crescente
   - [ ] Vetor decrescente
   - [ ] Vetor aleatório
-- [ ] Calcular médias dos tempos de execução
-- [ ] Organizar resultados em tabelas
+- [x] Calcular médias dos tempos de execução
+- [x] Organizar resultados em tabelas
 
 ### 📊 Análise e Gráficos
 - [ ] Identificar pior caso prático para cada algoritmo
@@ -135,7 +135,7 @@ x -> para marcar
 ---
 
 **📌 Atualizado em:** *[07/01/2025]*
-**✅ Progresso atual:** *[1%]*  
+**✅ Progresso atual:** *[5%]*  
 
 ---
 
