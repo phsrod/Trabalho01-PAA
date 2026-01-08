@@ -13,8 +13,8 @@ plt.style.use('ggplot')
 current_dir = Path.cwd()
 # Subir um nível para a pasta raiz do projeto
 project_root = current_dir.parent
-csv_path = project_root / "results" / "shellsort_geral_2026-01-08_13-02-48.csv" # ATENÇÃO COM O NOME DO ARQUIVO
-output_dir = project_root / "results" / "graphics"
+csv_path = project_root / "results/files/shellSort" / "shellsort_geral_2026-01-08_19-49-31.csv" # ATENÇÃO COM O NOME DO ARQUIVO
+output_dir = project_root / "results/graphics" / "shellSort"
 output_dir.mkdir(parents=True, exist_ok=True)
 
 # Carregar dados

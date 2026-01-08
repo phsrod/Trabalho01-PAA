@@ -216,7 +216,7 @@ void salvarCSVGeral(ResultadoCSV resultados[], int num_resultados, Estatisticas 
     struct tm *info = localtime(&agora);
     char nomeCSV[150];
 
-    sprintf(nomeCSV, "../results/cyclesort_geral_%04d-%02d-%02d_%02d-%02d-%02d.csv",
+    sprintf(nomeCSV, "../results/files/cycleSort/cyclesort_geral_%04d-%02d-%02d_%02d-%02d-%02d.csv",
             info->tm_year + 1900, info->tm_mon + 1, info->tm_mday,
             info->tm_hour, info->tm_min, info->tm_sec);
 
@@ -261,7 +261,7 @@ void salvarResultados(char tipo[], int tamanho, double tempos[], long comparacoe
     struct tm *info = localtime(&agora);
     char nomeArquivo[150];
 
-    sprintf(nomeArquivo, "../results/cyclesort_%s_%d_%02d-%02d-%04d_%02d-%02d-%02d.txt",
+    sprintf(nomeArquivo, "../results/files/cycleSort/cyclesort_%s_%d_%02d-%02d-%04d_%02d-%02d-%02d.txt",
             tipo, tamanho, info->tm_mday, info->tm_mon + 1,
             info->tm_year + 1900, info->tm_hour, info->tm_min, info->tm_sec);
 
