@@ -6,10 +6,10 @@
 #include <string.h>
 
 /*  ============================ CONSTANTES ===========================*/
-#define TAM_VETOR 20000     /* Usado apenas nas opções 1-3 do menu */
-#define REPETICOES 10       /* Repetições para opções 1-3 */
-#define TAM_MAX 100000      /* valor máximo dos elementos do vetor */
-#define REPETICOES_GERAL 31 /* 31 repetições para Teste Geral */
+#define TAM_VETOR 20000 /* Usado apenas nas opções 1-3 do menu */
+#define REPETICOES 10   /* Número total de repetições */
+#define QTD_DESCARTES 1 /* Quantidade de repetições descartadas (normalmente 1 para warm-up) */
+#define TAM_MAX 100000  /* valor máximo dos elementos do vetor */
 
 /* ================= ESTRUTURAS ================= */
 typedef struct
@@ -215,7 +215,7 @@ void salvarCSVGeral(ResultadoCSV resultados[], int num_resultados, Estatisticas 
                 resultados[i].trocas);
     }
 
-    fprintf(csv, "\nESTATISTICAS (ultimas 30 repeticoes)\n");
+    fprintf(csv, "\nESTATISTICAS (descartadas as %d primeiras repeticoes)\n", QTD_DESCARTES);
     fprintf(csv, "algoritmo;cenario;tamanho;media_tempo_ms;desvio_tempo_ms;media_comparacoes;media_trocas\n");
 
     for (int i = 0; i < num_estatisticas; i++)
@@ -232,10 +232,8 @@ void salvarCSVGeral(ResultadoCSV resultados[], int num_resultados, Estatisticas 
 
 /* ================= ARQUIVO TXT ================= */
 void salvarResultados(char tipo[], int tamanho, double tempos[], long comparacoes[], long trocas[],
-                      double mediaTempo, double desvioTempo, double mediaComparacoes, double mediaTrocas,
-                      int repeticoes)
+                      double mediaTempo, double desvioTempo, double mediaComparacoes, double mediaTrocas)
 {
-
     time_t agora = time(NULL);
     struct tm *info = localtime(&agora);
     char nomeArquivo[150];
@@ -257,20 +255,26 @@ void salvarResultados(char tipo[], int tamanho, double tempos[], long comparacoe
     fprintf(arquivo, "Configuracoes do experimento:\n");
     fprintf(arquivo, "------------------------------------------------------------\n");
     fprintf(arquivo, "Tamanho do vetor : %d\n", tamanho);
-    fprintf(arquivo, "Repeticoes       : %d (consideradas as 30 ultimas)\n", repeticoes);
+    fprintf(arquivo, "Repeticoes       : %d (descartadas %d primeiras)\n", REPETICOES, QTD_DESCARTES);
+    fprintf(arquivo, "Repeticoes validas: %d\n", REPETICOES - QTD_DESCARTES);
     fprintf(arquivo, "Tipo de vetor    : %s\n\n", tipo);
     fprintf(arquivo, "Resultados individuais:\n");
     fprintf(arquivo, "------------------------------------------------------------\n");
 
-    for (int i = 0; i < repeticoes; i++)
+    for (int i = 0; i < REPETICOES; i++)
     {
-        fprintf(arquivo, "Execucao %2d\n", i + 1);
+        fprintf(arquivo, "Execucao %2d", i + 1);
+        if (i < QTD_DESCARTES)
+        {
+            fprintf(arquivo, " (DESCARTADA)");
+        }
+        fprintf(arquivo, "\n");
         fprintf(arquivo, "  Tempo        : %8.3f ms\n", tempos[i]);
         fprintf(arquivo, "  Comparacoes  : %8ld\n", comparacoes[i]);
         fprintf(arquivo, "  Trocas       : %8ld\n\n", trocas[i]);
     }
 
-    fprintf(arquivo, "Resumo estatistico (ultimas 30 execucoes):\n");
+    fprintf(arquivo, "Resumo estatistico (descartadas %d primeiras execucoes):\n", QTD_DESCARTES);
     fprintf(arquivo, "------------------------------------------------------------\n");
     fprintf(arquivo, "Tempo medio           : %.3f ms\n", mediaTempo);
     fprintf(arquivo, "Desvio padrao (tempo) : %.3f ms\n\n", desvioTempo);
@@ -289,10 +293,8 @@ void executarTesteGeral()
     char *nomes_cenarios[] = {"crescente", "decrescente", "aleatorio"};
     int tipos_cenarios[] = {1, 2, 3};
 
-    const int TOTAL_REPETICOES = REPETICOES_GERAL;
-    const int REPETICOES_VALIDAS = 30;
     const int TOTAL_COMBINACOES = 3 * 3;
-    const int TOTAL_EXECUCOES = TOTAL_COMBINACOES * TOTAL_REPETICOES;
+    const int TOTAL_EXECUCOES = TOTAL_COMBINACOES * REPETICOES;
 
     ResultadoCSV *resultados = malloc(TOTAL_EXECUCOES * sizeof(ResultadoCSV));
     Estatisticas *estatisticas = malloc(TOTAL_COMBINACOES * sizeof(Estatisticas));
@@ -319,13 +321,13 @@ void executarTesteGeral()
         for (int c = 0; c < 3; c++)
         {
             printf("\n[CENARIO: %s | TAMANHO: %d]\n", nomes_cenarios[c], tamanho);
-            printf("Executando %d repeticoes...\n", TOTAL_REPETICOES);
+            printf("Executando %d repeticoes (serao descartadas %d)...\n", REPETICOES, QTD_DESCARTES);
 
-            double tempos[TOTAL_REPETICOES];
-            long comparacoes[TOTAL_REPETICOES];
-            long trocas[TOTAL_REPETICOES];
+            double tempos[REPETICOES];
+            long comparacoes[REPETICOES];
+            long trocas[REPETICOES];
 
-            for (int r = 0; r < TOTAL_REPETICOES; r++)
+            for (int r = 0; r < REPETICOES; r++)
             {
                 int *vetor = malloc(tamanho * sizeof(int));
                 if (!vetor)
@@ -353,34 +355,45 @@ void executarTesteGeral()
                 idx_resultado++;
 
                 if ((r + 1) % 5 == 0)
-                    printf("  Completadas: %d/%d\n", r + 1, TOTAL_REPETICOES);
+                    printf("  Completadas: %d/%d\n", r + 1, REPETICOES);
 
                 free(vetor);
             }
 
-            int inicio_estat = TOTAL_REPETICOES - REPETICOES_VALIDAS;
-            double media_tempo = calcularMediaDouble(tempos, inicio_estat, TOTAL_REPETICOES - 1);
-            double desvio_tempo = calcularDesvioPadraoDouble(tempos, inicio_estat, TOTAL_REPETICOES - 1, media_tempo);
-            double media_comparacoes = calcularMediaLong(comparacoes, inicio_estat, TOTAL_REPETICOES - 1);
-            double media_trocas = calcularMediaLong(trocas, inicio_estat, TOTAL_REPETICOES - 1);
+            // Calcular estatísticas descartando as primeiras QTD_DESCARTES repetições
+            int inicio_estat = QTD_DESCARTES;
+            int fim_estat = REPETICOES - 1;
+            int repeticoes_validas = REPETICOES - QTD_DESCARTES;
 
-            strcpy(estatisticas[idx_estatistica].cenario, nomes_cenarios[c]);
-            estatisticas[idx_estatistica].tamanho = tamanho;
-            estatisticas[idx_estatistica].media_tempo = media_tempo;
-            estatisticas[idx_estatistica].desvio_tempo = desvio_tempo;
-            estatisticas[idx_estatistica].media_comparacoes = media_comparacoes;
-            estatisticas[idx_estatistica].media_trocas = media_trocas;
-            idx_estatistica++;
+            if (repeticoes_validas > 0)
+            {
+                double media_tempo = calcularMediaDouble(tempos, inicio_estat, fim_estat);
+                double desvio_tempo = calcularDesvioPadraoDouble(tempos, inicio_estat, fim_estat, media_tempo);
+                double media_comparacoes = calcularMediaLong(comparacoes, inicio_estat, fim_estat);
+                double media_trocas = calcularMediaLong(trocas, inicio_estat, fim_estat);
 
-            salvarResultados(nomes_cenarios[c], tamanho,
-                             &tempos[inicio_estat],
-                             &comparacoes[inicio_estat],
-                             &trocas[inicio_estat],
-                             media_tempo, desvio_tempo,
-                             media_comparacoes, media_trocas,
-                             REPETICOES_VALIDAS);
+                strcpy(estatisticas[idx_estatistica].cenario, nomes_cenarios[c]);
+                estatisticas[idx_estatistica].tamanho = tamanho;
+                estatisticas[idx_estatistica].media_tempo = media_tempo;
+                estatisticas[idx_estatistica].desvio_tempo = desvio_tempo;
+                estatisticas[idx_estatistica].media_comparacoes = media_comparacoes;
+                estatisticas[idx_estatistica].media_trocas = media_trocas;
+                idx_estatistica++;
 
-            printf("  Concluido! Media: %.2f ms\n", media_tempo);
+                salvarResultados(nomes_cenarios[c], tamanho,
+                                 tempos,
+                                 comparacoes,
+                                 trocas,
+                                 media_tempo, desvio_tempo,
+                                 media_comparacoes, media_trocas);
+
+                printf("  Concluido! Media: %.2f ms (apos descarte de %d execucoes)\n",
+                       media_tempo, QTD_DESCARTES);
+            }
+            else
+            {
+                printf("  Erro: Nenhuma repeticao valida apos descarte!\n");
+            }
         }
     }
 
@@ -396,7 +409,6 @@ void executarTesteGeral()
 }
 
 /* ================= FUNÇÕES PARA OPÇÕES 1-3 (usam TAM_VETOR fixo) ================= */
-/* APENAS 2 funções wrapper são realmente necessárias */
 void executarExperimentoTamanhoFixo(int tipo, double tempos[], long comparacoes[], long trocas[], int tamanho)
 {
     int *vetor = malloc(tamanho * sizeof(int));
@@ -407,7 +419,12 @@ void executarExperimentoTamanhoFixo(int tipo, double tempos[], long comparacoes[
         gerarVetor(vetor, tipo, tamanho);
 
         printf("=====================================\n");
-        printf(" Execução %d\n", i + 1);
+        printf(" Execução %d", i + 1);
+        if (i < QTD_DESCARTES)
+        {
+            printf(" (SERA DESCARTADA)");
+        }
+        printf("\n");
         printf("=====================================\n");
 
         printf("Vetor antes da ordenação:\n");
@@ -428,10 +445,22 @@ void executarExperimentoTamanhoFixo(int tipo, double tempos[], long comparacoes[
 
 void processarResultados(int opcao, double tempos[], long comparacoes[], long trocas[])
 {
-    double media = calcularMediaDouble(tempos, 0, REPETICOES - 1);
-    double desvio = calcularDesvioPadraoDouble(tempos, 0, REPETICOES - 1, media);
-    double mediaComparacoes = calcularMediaLong(comparacoes, 0, REPETICOES - 1);
-    double mediaTrocas = calcularMediaLong(trocas, 0, REPETICOES - 1);
+    // Calcular estatísticas descartando as primeiras QTD_DESCARTES repetições
+    int inicio_estat = QTD_DESCARTES;
+    int fim_estat = REPETICOES - 1;
+    int repeticoes_validas = REPETICOES - QTD_DESCARTES;
+
+    if (repeticoes_validas <= 0)
+    {
+        printf("Erro: Nenhuma repeticao valida apos descarte!\n");
+        pausar();
+        return;
+    }
+
+    double media = calcularMediaDouble(tempos, inicio_estat, fim_estat);
+    double desvio = calcularDesvioPadraoDouble(tempos, inicio_estat, fim_estat, media);
+    double mediaComparacoes = calcularMediaLong(comparacoes, inicio_estat, fim_estat);
+    double mediaTrocas = calcularMediaLong(trocas, inicio_estat, fim_estat);
 
     char *tipo;
     if (opcao == 1)
@@ -442,9 +471,11 @@ void processarResultados(int opcao, double tempos[], long comparacoes[], long tr
         tipo = "aleatorio";
 
     salvarResultados(tipo, TAM_VETOR, tempos, comparacoes, trocas,
-                     media, desvio, mediaComparacoes, mediaTrocas, REPETICOES);
+                     media, desvio, mediaComparacoes, mediaTrocas);
 
     printf("\nResultados salvos com sucesso!\n");
+    printf("Estatisticas calculadas com %d repeticoes validas (descartadas %d primeiras)\n",
+           repeticoes_validas, QTD_DESCARTES);
     pausar();
 }
 
@@ -454,15 +485,20 @@ int menu()
     int opcao;
     limpar_tela();
     printf("=====================================\n");
-    printf("         SHELL SORT - MENU            \n");
+    printf("         SHELL SORT - MENU           \n");
+    printf("=====================================\n");
+    printf(" Configuracoes atuais:\n");
+    printf("  Repeticoes: %d\n", REPETICOES);
+    printf("  Descartes: %d\n", QTD_DESCARTES);
+    printf("  Repeticoes validas: %d\n", REPETICOES - QTD_DESCARTES);
     printf("=====================================\n");
     printf(" 1 - Vetor Crescente\n");
     printf(" 2 - Vetor Decrescente\n");
-    printf(" 3 - Vetor Aleatório\n");
+    printf(" 3 - Vetor Aleatorio\n");
     printf(" 4 - Teste Geral (todos os casos)\n");
     printf(" 0 - Sair\n");
     printf("=====================================\n");
-    printf(" Escolha uma opção: ");
+    printf(" Escolha uma opcao: ");
     scanf("%d", &opcao);
     return opcao;
 }
@@ -474,9 +510,9 @@ void executarOpcao(int opcao)
     long trocas[REPETICOES];
 
     limpar_tela();
-    printf("Opção selecionada: %d\n", opcao);
+    printf("Opcao selecionada: %d\n", opcao);
 
-    if (confirmar("Deseja iniciar a execução?"))
+    if (confirmar("Deseja iniciar a execucao?"))
     {
         if (opcao == 4)
         {
@@ -495,6 +531,16 @@ int main()
 {
     srand(time(NULL));
     int executando = 1;
+
+    // Validação das constantes
+    if (QTD_DESCARTES >= REPETICOES)
+    {
+        printf("ERRO: QTD_DESCARTES (%d) deve ser menor que REPETICOES (%d)!\n",
+               QTD_DESCARTES, REPETICOES);
+        printf("Por favor, ajuste as constantes no codigo.\n");
+        pausar();
+        return 1;
+    }
 
     while (executando)
     {
@@ -518,7 +564,7 @@ int main()
 
         default:
             limpar_tela();
-            printf("Opção inválida!\n");
+            printf("Opcao invalida!\n");
             pausar();
         }
     }
