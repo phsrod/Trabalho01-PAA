@@ -52,6 +52,23 @@ CONFIG_ALGORITMOS = {
 }
 
 # ============================================
+# RESOLUÇÃO DE CAMINHOS
+# ============================================
+
+def obter_project_root():
+    """Resolve o diretório raiz do projeto independentemente de onde o script é executado."""
+    script_dir = Path(__file__).resolve().parent
+    root_por_arquivo = script_dir.parent
+
+    # Se o usuário rodar a partir da raiz do repo (ex.: python src/gerar_graficos.py)
+    cwd = Path.cwd()
+    if (cwd / "results").exists() and (cwd / "src").exists():
+        return cwd
+
+    # Caso contrário, usamos o diretório relativo ao arquivo
+    return root_por_arquivo
+
+# ============================================
 # FUNÇÕES DE PROCESSAMENTO DE DADOS
 # ============================================
 
@@ -635,9 +652,9 @@ def processar_algoritmo(algoritmo_key):
     pasta_graphics = config["pasta_graphics"]
     cores_cenarios = config["cores_cenarios"]
     
-    # Configurar caminhos
-    current_dir = Path.cwd()
-    project_root = current_dir.parent
+    # Configurar caminhos de forma resiliente
+    project_root = obter_project_root()
+    print(f" Diretório de trabalho usado como raiz do projeto: {project_root}")
     
     # Procurar arquivo CSV mais recente na pasta
     files_dir = project_root / "results" / "files" / pasta_files
