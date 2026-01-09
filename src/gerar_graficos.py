@@ -2,7 +2,6 @@
 GERADOR DE GRÁFICOS PARA ALGORITMOS DE ORDENAÇÃO
 =================================================
 Este script gera gráficos de análise de desempenho para algoritmos de ordenação.
-Baseado no código que já funciona para Shell Sort, agora estendido para Cycle Sort.
 
 ESTRUTURA DE PASTAS ESPERADA:
 projeto/
@@ -14,8 +13,6 @@ projeto/
     └── graphics/
         ├── shellSort/     (gráficos gerados do Shell Sort)
         └── cycleSort/     (gráficos gerados do Cycle Sort)
-
-ATENÇÃO: Verifique o nome do arquivo CSV na linha 20 para cada execução.
 """
 
 import pandas as pd
@@ -66,7 +63,7 @@ def processar_dados(csv_path, algoritmo_nome):
     print(f"Carregando arquivo: {csv_path}")
     df = pd.read_csv(csv_path, sep=';', na_filter=False)
 
-    print(f"\n📊 Informações do DataFrame:")
+    print(f"\nInformações do DataFrame:")
     print(f"Total de linhas: {len(df)}")
     print(f"Colunas: {list(df.columns)}")
 
@@ -89,12 +86,12 @@ def processar_dados(csv_path, algoritmo_nome):
     df_raw = df[~df['is_stat']].copy()
     df_stats = df[df['is_stat']].copy()
 
-    print(f"\n📈 Dados brutos: {len(df_raw)} linhas")
-    print(f"📊 Dados estatísticos: {len(df_stats)} linhas")
+    print(f"\nDados brutos: {len(df_raw)} linhas")
+    print(f"Dados estatísticos: {len(df_stats)} linhas")
 
     # Mostrar as estatísticas
     if len(df_stats) > 0:
-        print(f"\n📋 Dados estatísticos encontrados:")
+        print(f"\n ✅Dados estatísticos encontrados:")
         print(df_stats[['algoritmo', 'cenario', 'tamanho', 'repeticao', 'tempo_ms', 'comparacoes', 'trocas']])
         
         # Renomear as colunas das estatísticas
@@ -112,7 +109,7 @@ def processar_dados(csv_path, algoritmo_nome):
         # Remover coluna auxiliar
         df_stats_clean = df_stats_clean.drop(columns=['is_stat'])
         
-        print(f"\n✅ Estatísticas após renomeação:")
+        print(f"\nEstatísticas após renomeação:")
         print(df_stats_clean[['algoritmo', 'cenario', 'tamanho', 'media_tempo_ms', 'desvio_tempo_ms', 
                              'media_comparacoes', 'media_trocas']])
         
@@ -131,7 +128,7 @@ def processar_dados(csv_path, algoritmo_nome):
         df_stats = df_stats_clean
     else:
         # Calcular estatísticas dos dados brutos
-        print("\n⚠️  Calculando estatísticas a partir dos dados brutos...")
+        print("\nCalculando estatísticas a partir dos dados brutos...")
         df_stats = df_raw.groupby(['algoritmo', 'cenario', 'tamanho']).agg({
             'tempo_ms': ['mean', 'std'],
             'comparacoes': 'mean',
@@ -153,8 +150,8 @@ def processar_dados(csv_path, algoritmo_nome):
         df_stats = df_stats.dropna(subset=['cenario', 'tamanho'])
         df_stats['cenario'] = df_stats['cenario'].astype(str).str.strip()
 
-    print(f"\n✅ Dados processados com sucesso!")
-    print(f"📊 Estatísticas disponíveis: {len(df_stats)} linhas")
+    print(f"\n ✅ Dados processados com sucesso!")
+    print(f"Estatísticas disponíveis: {len(df_stats)} linhas")
     
     if len(df_stats) > 0:
         print(f"\nResumo das estatísticas para {algoritmo_nome}:")
@@ -187,11 +184,11 @@ def plot_individual_scenario(cenario, df_stats_data, output_dir, algoritmo_nome,
     
     # Verificar se temos dados suficientes
     if len(stats_cenario) == 0:
-        print(f"⚠️  Nenhum dado estatístico para o cenário: {cenario_str}")
+        print(f" ⚠️ Nenhum dado estatístico para o cenário: {cenario_str}")
         plt.close()
         return None
     
-    print(f"   📈 Plotando gráfico para cenário: {cenario_str}")
+    print(f"      Plotando gráfico para cenário: {cenario_str}")
     print(f"      Tamanhos disponíveis: {list(stats_cenario['tamanho'])}")
     
     # Gráfico 1: Tempo médio vs Tamanho
@@ -267,7 +264,7 @@ def criar_graficos_comparativos(df_stats, output_dir, algoritmo_nome, cores_cena
     """
     cenarios_unicos = df_stats['cenario'].unique()
     
-    print(f"\n🎨 Criando gráficos comparativos para {algoritmo_nome}...")
+    print(f"\n Criando gráficos comparativos para {algoritmo_nome}...")
     arquivos_gerados = []
     
     # Gráfico 1: Comparação de Tempo Médio entre Cenários
@@ -624,13 +621,13 @@ def processar_algoritmo(algoritmo_key):
     Processa um algoritmo específico e gera todos os gráficos.
     """
     print(f"\n{'='*60}")
-    print(f"🚀 PROCESSANDO: {algoritmo_key.upper()}")
+    print(f"PROCESSANDO: {algoritmo_key.upper()}")
     print('='*60)
     
     # Obter configurações do algoritmo
     config = CONFIG_ALGORITMOS.get(algoritmo_key)
     if not config:
-        print(f"❌ Algoritmo '{algoritmo_key}' não configurado!")
+        print(f"⚠️ Algoritmo '{algoritmo_key}' não configurado!")
         return False
     
     algoritmo_nome = config["nome"]
@@ -645,35 +642,35 @@ def processar_algoritmo(algoritmo_key):
     # Procurar arquivo CSV mais recente na pasta
     files_dir = project_root / "results" / "files" / pasta_files
     if not files_dir.exists():
-        print(f"❌ Pasta não encontrada: {files_dir}")
+        print(f"⚠️ Pasta não encontrada: {files_dir}")
         return False
     
     # Listar arquivos CSV
     arquivos_csv = list(files_dir.glob("*.csv"))
     if not arquivos_csv:
-        print(f"❌ Nenhum arquivo CSV encontrado em: {files_dir}")
+        print(f"⚠️ Nenhum arquivo CSV encontrado em: {files_dir}")
         return False
     
     # Usar o arquivo mais recente
     csv_path = max(arquivos_csv, key=os.path.getmtime)
-    print(f"📂 Arquivo selecionado: {csv_path.name}")
+    print(f" Arquivo selecionado: {csv_path.name}")
     
     output_dir = project_root / "results" / "graphics" / pasta_graphics
     output_dir.mkdir(parents=True, exist_ok=True)
     
-    print(f"📁 Pasta de saída: {output_dir}")
+    print(f" Pasta de saída: {output_dir}")
     
     # Processar dados
     try:
         df_raw, df_stats = processar_dados(csv_path, algoritmo_nome)
         
         if len(df_stats) == 0:
-            print(f"❌ Nenhum dado estatístico disponível para {algoritmo_nome}")
+            print(f" ⚠️ Nenhum dado estatístico disponível para {algoritmo_nome}")
             return False
         
         # Criar gráficos para cada cenário
         cenarios_unicos = df_stats['cenario'].unique()
-        print(f"\n🎯 Criando gráficos individuais para {len(cenarios_unicos)} cenários...")
+        print(f"\n ✅ Criando gráficos individuais para {len(cenarios_unicos)} cenários...")
         
         arquivos_individuais = []
         for i, cenario in enumerate(cenarios_unicos, 1):
@@ -688,15 +685,15 @@ def processar_algoritmo(algoritmo_key):
                                                            algoritmo_nome, cores_cenarios)
         
         # Exibir estatísticas básicas
-        print(f"\n📊 Estatísticas por Cenário - {algoritmo_nome}:")
+        print(f"\n Estatísticas por Cenário - {algoritmo_nome}:")
         print("-" * 60)
         
         for cenario in sorted(cenarios_unicos):
             cenario_str = str(cenario)
-            subset = df_stats[df_stats['cenario'] == cenario_str]
+            subset = df_stats[df_stats['cenario'] == cenario_str] 
             
             if not subset.empty:
-                print(f"\nCenário: {cenario_str.upper()}")
+                print(f"\n Cenário: {cenario_str.upper()}")
                 print(f"  Tamanhos analisados: {', '.join(map(str, sorted(subset['tamanho'].unique())))}")
                 
                 max_tamanho = subset['tamanho'].max()
@@ -712,7 +709,7 @@ def processar_algoritmo(algoritmo_key):
         # Contar gráficos gerados
         total_graficos = len(list(output_dir.glob('*.png')))
         print(f"\n✅ {algoritmo_nome} - Processamento concluído com sucesso!")
-        print(f"📋 Total de gráficos gerados: {total_graficos}")
+        print(f" Total de gráficos gerados: {total_graficos}")
         
         return True
         
@@ -731,7 +728,7 @@ def main():
     Função principal com menu interativo.
     """
     print("\n" + "="*60)
-    print("🎯 GERADOR DE GRÁFICOS PARA ALGORITMOS DE ORDENAÇÃO")
+    print(" GERADOR DE GRÁFICOS PARA ALGORITMOS DE ORDENAÇÃO")
     print("="*60)
     print("\nEste programa gera gráficos de análise de desempenho para:")
     print("  • Shell Sort")
@@ -754,7 +751,7 @@ def main():
         print("4. Sair do programa")
         
         try:
-            opcao = input("\n👉 Digite o número da opção desejada (1-4): ").strip()
+            opcao = input("\n Digite o número da opção desejada (1-4): ").strip()
             
             if opcao == "1":
                 print("\n" + "🔵"*30)
@@ -775,9 +772,9 @@ def main():
                 break
                 
             elif opcao == "3":
-                print("\n" + "🌈"*30)
-                print("🌈 GERANDO GRÁFICOS PARA TODOS OS ALGORITMOS")
-                print("🌈"*30)
+                print("\n" + "🟡"*30)
+                print("🟡 GERANDO GRÁFICOS PARA TODOS OS ALGORITMOS")
+                print("🟡"*30)
                 
                 sucesso_shell = processar_algoritmo("shellsort")
                 
@@ -799,7 +796,7 @@ def main():
                 break
                 
             elif opcao == "4":
-                print("\n👋 Saindo... Até logo!")
+                print("\n Saindo... Até logo!")
                 break
                 
             else:
