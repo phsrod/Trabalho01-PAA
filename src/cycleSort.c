@@ -40,6 +40,10 @@ typedef struct
 #define limpar_tela() system("clear")
 #endif
 
+/**
+ * @brief Pausa a execução até que o usuário pressione ENTER.
+ * @return void
+*/
 void pausar()
 {
     printf("\nPressione ENTER para continuar...");
@@ -47,6 +51,11 @@ void pausar()
     getchar();
 }
 
+/**
+ * @brief Solicita confirmação do usuário.
+ * @param mensagem Mensagem a ser exibida para confirmação.
+ * @return 1 se o usuário confirmar (s/S), 0 caso contrário.
+*/
 int confirmar(const char *mensagem)
 {
     char op;
@@ -55,7 +64,12 @@ int confirmar(const char *mensagem)
     return (op == 's' || op == 'S');
 }
 
-/* ================= FUNÇÃO DE IMPRESSÃO ================= */
+/**
+ * @brief Imprime todos os elementos do vetor ou os primeiros 50 elementos se o tamanho for maior que 50.
+ * @param v Vetor a ser impresso.
+ * @param tamanho Tamanho do vetor.
+ * @return void 
+*/
 void imprimirVetor(int v[], int tamanho)
 {
     int limite = (tamanho < 50) ? tamanho : 50;
@@ -69,7 +83,12 @@ void imprimirVetor(int v[], int tamanho)
     printf("\n");
 }
 
-/* ================= FUNÇÃO SHUFFLE ================= */
+/**
+ * @brief Embaralha os elementos do vetor.
+ * @param v Vetor a ser embaralhado.
+ * @param n Tamanho do vetor.
+ * @return void 
+*/
 void shuffle(int v[], int n)
 {
     for (int i = n - 1; i > 0; i--)
@@ -81,7 +100,13 @@ void shuffle(int v[], int n)
     }
 }
 
-/* ================= GERAÇÃO DE VETORES ÚNICA ================= */
+/**
+ * @brief Gera um vetor com elementos em ordem crescente, decrescente ou aleatória.
+ * @param v Vetor a ser preenchido.
+ * @param tipo Tipo de vetor: 1 - crescente, 2 - decrescente, 3 - aleatório.
+ * @param tamanho Tamanho do vetor.
+ * @return void
+*/
 void gerarVetor(int v[], int tipo, int tamanho)
 {
     if (tipo == 1)
@@ -116,7 +141,14 @@ void gerarVetor(int v[], int tipo, int tamanho)
     }
 }
 
-/* ================= CYCLE SORT - EXATAMENTE COMO VOCÊ ENVIOU ================= */
+/**
+ * @brief Implementa o algoritmo Cycle Sort para ordenar um vetor.
+ * @param v Vetor a ser ordenado.
+ * @param tamanho Tamanho do vetor.
+ * @param comparacoes Ponteiro para armazenar o número de comparações realizadas.
+ * @param trocas Ponteiro para armazenar o número de trocas realizadas.
+ * @return void
+ */
 void cycleSort(int v[], int tamanho, long *comparacoes, long *trocas)
 {
     *comparacoes = 0;
@@ -177,14 +209,25 @@ void cycleSort(int v[], int tamanho, long *comparacoes, long *trocas)
     }
 }
 
-/* ================= TEMPO ====================*/
+/**
+ * @brief Mede o tempo decorrido entre dois instantes.
+ * @param inicio Instante inicial.
+ * @param fim Instante final.
+ * @return Tempo decorrido em milissegundos.
+*/
 double medirTempo(struct timespec inicio, struct timespec fim)
 {
     return (fim.tv_sec - inicio.tv_sec) * 1000.0 +
            (fim.tv_nsec - inicio.tv_nsec) / 1000000.0;
 }
 
-/* ================= ESTATÍSTICAS GENÉRICAS =============*/
+/**
+ * @brief Calcula a média dos valores do tipo double em um intervalo do vetor.
+ * @param valores Vetor de valores do tipo double.
+ * @param inicio Índice inicial do intervalo.
+ * @param fim Índice final do intervalo.
+ * @return Média dos valores no intervalo.
+ */
 double calcularMediaDouble(double valores[], int inicio, int fim)
 {
     double soma = 0.0;
@@ -193,6 +236,14 @@ double calcularMediaDouble(double valores[], int inicio, int fim)
     return soma / (fim - inicio + 1);
 }
 
+/**
+ * @brief Calcula o desvio padrão dos valores em um intervalo do vetor.
+ * @param valores Vetor de valores.
+ * @param inicio Índice inicial do intervalo.
+ * @param fim Índice final do intervalo.
+ * @param media Média dos valores no intervalo.
+ * @return Desvio padrão dos valores no intervalo.
+ */
 double calcularDesvioPadraoDouble(double valores[], int inicio, int fim, double media)
 {
     double soma = 0.0;
@@ -201,6 +252,13 @@ double calcularDesvioPadraoDouble(double valores[], int inicio, int fim, double 
     return sqrt(soma / (fim - inicio + 1));
 }
 
+/**
+ * @brief Calcula a média dos valores do tipo long em um intervalo do vetor.
+ * @param valores Vetor de valores do tipo long.
+ * @param inicio Índice inicial do intervalo.
+ * @param fim Índice final do intervalo.
+ * @return Média dos valores no intervalo convertida para double.
+ */
 double calcularMediaLong(long valores[], int inicio, int fim)
 {
     long soma = 0;
@@ -209,7 +267,14 @@ double calcularMediaLong(long valores[], int inicio, int fim)
     return (double)soma / (fim - inicio + 1);
 }
 
-/* ================= ARQUIVO CSV ================= */
+/**
+ * @brief Salva os resultados gerais em um arquivo CSV.
+ * @param resultados Vetor de resultados individuais.
+ * @param num_resultados Número de resultados individuais.
+ * @param estatisticas Vetor de estatísticas calculadas.
+ * @param num_estatisticas Número de estatísticas calculadas.
+ * @return void
+ */
 void salvarCSVGeral(ResultadoCSV resultados[], int num_resultados, Estatisticas estatisticas[], int num_estatisticas)
 {
     time_t agora = time(NULL);
@@ -253,7 +318,19 @@ void salvarCSVGeral(ResultadoCSV resultados[], int num_resultados, Estatisticas 
     printf("\nCSV geral salvo em: %s\n", nomeCSV);
 }
 
-/* ================= ARQUIVO TXT ================= */
+/**
+ * @brief Salva os resultados detalhados de um experimento em um arquivo TXT.
+ * @param tipo Tipo de vetor (crescente, decrescente, aleatório).
+ * @param tamanho Tamanho do vetor.
+ * @param tempos Vetor de tempos de execução.
+ * @param comparacoes Vetor de números de comparações.
+ * @param trocas Vetor de números de trocas.
+ * @param mediaTempo Média dos tempos de execução.
+ * @param desvioTempo Desvio padrão dos tempos de execução.
+ * @param mediaComparacoes Média dos números de comparações.
+ * @param mediaTrocas Média dos números de trocas.
+ * @return void
+ */
 void salvarResultados(char tipo[], int tamanho, double tempos[], long comparacoes[], long trocas[],
                       double mediaTempo, double desvioTempo, double mediaComparacoes, double mediaTrocas)
 {
@@ -309,7 +386,10 @@ void salvarResultados(char tipo[], int tamanho, double tempos[], long comparacoe
     printf("  TXT salvo: %s\n", nomeArquivo);
 }
 
-/* ================= TESTE GERAL ================= */
+/**
+ * @brief Executa o teste geral com todos os cenários e tamanhos.
+ * @return void
+ */
 void executarTesteGeral()
 {
     int tamanhos[] = {20000, 40000, 60000};
@@ -432,6 +512,15 @@ void executarTesteGeral()
 }
 
 /* ================= FUNÇÕES PARA OPÇÕES 1-3 (usam TAM_VETOR fixo) ================= */
+/**
+ * @brief Executa o experimento para um tamanho fixo de vetor.
+ * @param tipo Tipo de vetor: 1 - crescente, 2 - decrescente, 3 - aleatório.
+ * @param tempos Vetor para armazenar os tempos de execução.
+ * @param comparacoes Vetor para armazenar o número de comparações.
+ * @param trocas Vetor para armazenar o número de trocas.
+ * @param tamanho Tamanho do vetor.
+ * @return void
+ */
 void executarExperimentoTamanhoFixo(int tipo, double tempos[], long comparacoes[], long trocas[], int tamanho)
 {
     int *vetor = malloc(tamanho * sizeof(int));
@@ -466,6 +555,14 @@ void executarExperimentoTamanhoFixo(int tipo, double tempos[], long comparacoes[
     free(vetor);
 }
 
+/**
+ * @brief Processa e salva os resultados do experimento.
+ * @param opcao Tipo de vetor: 1 - crescente, 2 - decrescente, 3 - aleatório.
+ * @param tempos Vetor para armazenar os tempos de execução.
+ * @param comparacoes Vetor para armazenar o número de comparações.
+ * @param trocas Vetor para armazenar o número de trocas.
+ * @return void
+ */
 void processarResultados(int opcao, double tempos[], long comparacoes[], long trocas[])
 {
     // Calcular estatísticas descartando as primeiras QTD_DESCARTES repetições
@@ -503,6 +600,10 @@ void processarResultados(int opcao, double tempos[], long comparacoes[], long tr
 }
 
 /* ================= MENU ================= */
+/**
+ * @brief Exibe o menu e obtém a opção do usuário.
+ * @return Opção selecionada pelo usuário.
+ */
 int menu()
 {
     int opcao;
@@ -526,6 +627,11 @@ int menu()
     return opcao;
 }
 
+/**
+ * @brief Executa a opção selecionada pelo usuário.
+ * @param opcao Opção selecionada.
+ * @return void
+ */
 void executarOpcao(int opcao)
 {
     double tempos[REPETICOES];
