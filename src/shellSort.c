@@ -7,7 +7,7 @@
 
 /*  ============================ CONSTANTES ===========================*/
 #define TAM_VETOR 20000 /* Usado apenas nas opções 1-3 do menu */
-#define REPETICOES 10   /* Número total de repetições */
+#define REPETICOES 11   /* Número total de repetições */
 #define QTD_DESCARTES 1 /* Quantidade de repetições descartadas (normalmente 1 para warm-up) */
 #define TAM_MAX 100000  /* valor máximo dos elementos do vetor */
 
