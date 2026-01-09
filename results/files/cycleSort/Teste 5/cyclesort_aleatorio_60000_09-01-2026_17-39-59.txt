@@ -1,0 +1,77 @@
+============================================================
+                      CYCLE SORT                            
+============================================================
+
+Configuracoes do experimento:
+------------------------------------------------------------
+Tamanho do vetor : 60000
+Repeticoes       : 11 (descartadas 1 primeiras)
+Repeticoes validas: 10
+Tipo de vetor    : aleatorio
+
+Resultados individuais:
+------------------------------------------------------------
+Execucao  1 (DESCARTADA)
+  Tempo        : 14077.738 ms
+  Comparacoes  : 5398745291
+  Trocas       :    59998
+
+Execucao  2
+  Tempo        : 13608.682 ms
+  Comparacoes  : 5398337478
+  Trocas       :    60000
+
+Execucao  3
+  Tempo        : 13307.772 ms
+  Comparacoes  : 5398488496
+  Trocas       :    59998
+
+Execucao  4
+  Tempo        : 13310.241 ms
+  Comparacoes  : 5398350532
+  Trocas       :    59998
+
+Execucao  5
+  Tempo        : 13556.494 ms
+  Comparacoes  : 5398615735
+  Trocas       :    59994
+
+Execucao  6
+  Tempo        : 13554.440 ms
+  Comparacoes  : 5399285467
+  Trocas       :    60000
+
+Execucao  7
+  Tempo        : 12774.350 ms
+  Comparacoes  : 5399070356
+  Trocas       :    59999
+
+Execucao  8
+  Tempo        : 13538.147 ms
+  Comparacoes  : 5398490426
+  Trocas       :    59998
+
+Execucao  9
+  Tempo        : 13332.413 ms
+  Comparacoes  : 5398701452
+  Trocas       :    60000
+
+Execucao 10
+  Tempo        : 13401.202 ms
+  Comparacoes  : 5398596456
+  Trocas       :    59996
+
+Execucao 11
+  Tempo        : 15476.273 ms
+  Comparacoes  : 5398749694
+  Trocas       :    59998
+
+Resumo estatistico (descartadas 1 primeiras execucoes):
+------------------------------------------------------------
+Tempo medio           : 13586.001 ms
+Desvio padrao (tempo) : 669.962 ms
+
+Media de comparacoes  : 5398668609.20
+Media de trocas       : 59998.10
+
+============================================================

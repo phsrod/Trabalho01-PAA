@@ -1,0 +1,77 @@
+============================================================
+                      CYCLE SORT                            
+============================================================
+
+Configuracoes do experimento:
+------------------------------------------------------------
+Tamanho do vetor : 60000
+Repeticoes       : 11 (descartadas 1 primeiras)
+Repeticoes validas: 10
+Tipo de vetor    : crescente
+
+Resultados individuais:
+------------------------------------------------------------
+Execucao  1 (DESCARTADA)
+  Tempo        : 3543.369 ms
+  Comparacoes  : 1799970000
+  Trocas       :        0
+
+Execucao  2
+  Tempo        : 3454.073 ms
+  Comparacoes  : 1799970000
+  Trocas       :        0
+
+Execucao  3
+  Tempo        : 3443.738 ms
+  Comparacoes  : 1799970000
+  Trocas       :        0
+
+Execucao  4
+  Tempo        : 3449.457 ms
+  Comparacoes  : 1799970000
+  Trocas       :        0
+
+Execucao  5
+  Tempo        : 3452.508 ms
+  Comparacoes  : 1799970000
+  Trocas       :        0
+
+Execucao  6
+  Tempo        : 3481.451 ms
+  Comparacoes  : 1799970000
+  Trocas       :        0
+
+Execucao  7
+  Tempo        : 3466.246 ms
+  Comparacoes  : 1799970000
+  Trocas       :        0
+
+Execucao  8
+  Tempo        : 3454.325 ms
+  Comparacoes  : 1799970000
+  Trocas       :        0
+
+Execucao  9
+  Tempo        : 3481.843 ms
+  Comparacoes  : 1799970000
+  Trocas       :        0
+
+Execucao 10
+  Tempo        : 3476.591 ms
+  Comparacoes  : 1799970000
+  Trocas       :        0
+
+Execucao 11
+  Tempo        : 3475.710 ms
+  Comparacoes  : 1799970000
+  Trocas       :        0
+
+Resumo estatistico (descartadas 1 primeiras execucoes):
+------------------------------------------------------------
+Tempo medio           : 3463.594 ms
+Desvio padrao (tempo) : 13.668 ms
+
+Media de comparacoes  : 1799970000.00
+Media de trocas       : 0.00
+
+============================================================

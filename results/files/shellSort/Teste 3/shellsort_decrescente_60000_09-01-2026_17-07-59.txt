@@ -1,0 +1,77 @@
+============================================================
+               SHELL SORT - SEQUENCIA DE KNUTH               
+============================================================
+
+Configuracoes do experimento:
+------------------------------------------------------------
+Tamanho do vetor : 60000
+Repeticoes       : 11 (descartadas 1 primeiras)
+Repeticoes validas: 10
+Tipo de vetor    : decrescente
+
+Resultados individuais:
+------------------------------------------------------------
+Execucao  1 (DESCARTADA)
+  Tempo        :    3.585 ms
+  Comparacoes  :   863734
+  Trocas       :   361978
+
+Execucao  2
+  Tempo        :    3.363 ms
+  Comparacoes  :   863734
+  Trocas       :   361978
+
+Execucao  3
+  Tempo        :    3.486 ms
+  Comparacoes  :   863734
+  Trocas       :   361978
+
+Execucao  4
+  Tempo        :    3.388 ms
+  Comparacoes  :   863734
+  Trocas       :   361978
+
+Execucao  5
+  Tempo        :    4.842 ms
+  Comparacoes  :   863734
+  Trocas       :   361978
+
+Execucao  6
+  Tempo        :    4.910 ms
+  Comparacoes  :   863734
+  Trocas       :   361978
+
+Execucao  7
+  Tempo        :    5.628 ms
+  Comparacoes  :   863734
+  Trocas       :   361978
+
+Execucao  8
+  Tempo        :    5.747 ms
+  Comparacoes  :   863734
+  Trocas       :   361978
+
+Execucao  9
+  Tempo        :    3.606 ms
+  Comparacoes  :   863734
+  Trocas       :   361978
+
+Execucao 10
+  Tempo        :    3.516 ms
+  Comparacoes  :   863734
+  Trocas       :   361978
+
+Execucao 11
+  Tempo        :    5.040 ms
+  Comparacoes  :   863734
+  Trocas       :   361978
+
+Resumo estatistico (descartadas 1 primeiras execucoes):
+------------------------------------------------------------
+Tempo medio           : 4.353 ms
+Desvio padrao (tempo) : 0.923 ms
+
+Media de comparacoes  : 863734.00
+Media de trocas       : 361978.00
+
+============================================================
