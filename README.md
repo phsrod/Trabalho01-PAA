@@ -1,7 +1,7 @@
 # 📋 Trabalho 01 - Análise Comparativa de Algoritmos de Ordenação
 
 **Disciplina:** Projeto e Análise de Algoritmos  
-**Professor:** Raf Araújo de Miranda  
+**Professor:** Rai Araújo de Miranda  
 **Período:** 5° - Sistemas de Informação  
 **Ano/Semestre:** 2025.4  
 **Universidade Federal do Piauí – Campus Senador Helvídio Nunes de Barros, Picos**
@@ -129,13 +129,14 @@ x -> para marcar
 ## 🔗 Links Úteis
 
 - [Modelo de relatório acadêmico](https://www.overleaf.com/project/695e6381059f34613c4a4a14)
+- [Modelo de Apresentação de Slides](https://docs.google.com/presentation/d/1gNWAoQPXcdVmxetjCAsR06dCQQXqE98gv0TWxfAHZnM/edit?usp=sharing)
 - [Ferramentas para geração de gráficos]()
 - [Material de apoio sobre algoritmos de ordenação]()
 
 ---
 
-**📌 Atualizado em:** *[07/01/2025]*
-**✅ Progresso atual:** *[5%]*  
+**📌 Atualizado em:** *[08/01/2025]*
+**✅ Progresso atual:** *[10%]*  
 
 ---
 
