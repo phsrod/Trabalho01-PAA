@@ -290,6 +290,34 @@ def criar_graficos_comparativos(df_stats, output_dir, algoritmo_nome, cores_cena
     plt.legend(title='Cenário', title_fontsize=12, fontsize=11)
     plt.grid(True, alpha=0.3)
 
+    for cenario in cenarios_unicos:
+        cenario_str = str(cenario)
+        subset = df_stats[df_stats['cenario'] == cenario_str].copy()
+        subset = subset.sort_values('tamanho')
+        
+        for i, row in subset.iterrows():
+            # Alternar entre direita e esquerda para evitar sobreposição
+            if i % 2 == 0:
+                offset_x = 15  # À direita do ponto
+                ha = 'left'    # Alinhamento à esquerda (texto começa à direita do ponto)
+            else:
+                offset_x = -15  # À esquerda do ponto
+                ha = 'right'    # Alinhamento à direita (texto termina à esquerda do ponto)
+            
+            plt.annotate(f'{row["media_tempo_ms"]:.2f}',
+                         xy=(row['tamanho'], row['media_tempo_ms']),
+                         xytext=(offset_x, 0),  # Horizontal apenas
+                         textcoords='offset points',
+                         ha=ha,
+                         va='center',  # Centralizado verticalmente
+                         fontsize=12,   # Fonte pequena
+                         fontweight='normal',
+                         bbox=dict(boxstyle="round,pad=0.15",
+                                   facecolor='white',
+                                   alpha=0.7,
+                                   edgecolor='lightgray',
+                                   linewidth=0.5))
+
     filename = f'{algoritmo_nome.lower().replace(" ", "_")}_comparacao_tempo_cenarios.png'
     plt.tight_layout()
     plt.savefig(output_dir / filename, dpi=300, bbox_inches='tight')
@@ -319,6 +347,34 @@ def criar_graficos_comparativos(df_stats, output_dir, algoritmo_nome, cores_cena
               fontsize=14, fontweight='bold')
     plt.legend(title='Cenário', title_fontsize=12, fontsize=11)
     plt.grid(True, alpha=0.3)
+
+    for cenario in cenarios_unicos:
+        cenario_str = str(cenario)
+        subset = df_stats[df_stats['cenario'] == cenario_str].copy()
+        subset = subset.sort_values('tamanho')
+        
+        for i, row in subset.iterrows():
+            # Alternar entre direita e esquerda baseado no índice
+            if i % 2 == 0:
+                offset_x = 20  # À direita
+                ha = 'left'
+            else:
+                offset_x = -20  # À esquerda
+                ha = 'right'
+            
+            plt.annotate(f'{row["media_comparacoes"]:,.0f}',
+                         xy=(row['tamanho'], row['media_comparacoes']),
+                         xytext=(offset_x, 0),
+                         textcoords='offset points',
+                         ha=ha,
+                         va='center',
+                         fontsize=12,
+                         fontweight='normal',
+                         bbox=dict(boxstyle="round,pad=0.15",
+                                   facecolor='white',
+                                   alpha=0.7,
+                                   edgecolor='lightgray',
+                                   linewidth=0.5))
 
     filename = f'{algoritmo_nome.lower().replace(" ", "_")}_comparacao_comparacoes.png'
     plt.tight_layout()
@@ -444,18 +500,35 @@ def criar_graficos_comparativos(df_stats, output_dir, algoritmo_nome, cores_cena
     plt.grid(True, alpha=0.3)
 
     # Adicionar anotações com valores
+        # ADICIONAR ANOTAÇÕES COM VALORES PARA TODOS OS PONTOS AO LADO
     for cenario in cenarios_unicos:
         cenario_str = str(cenario)
         subset = df_stats[df_stats['cenario'] == cenario_str].copy()
         subset = subset.sort_values('tamanho')
         
-        # Anotar o último ponto
-        last_point = subset.iloc[-1]
-        plt.annotate(f'{last_point["media_trocas"]:,.0f}', 
-                     xy=(last_point['tamanho'], last_point['media_trocas']),
-                     xytext=(0, 10), textcoords='offset points',
-                     ha='center', fontsize=10,
-                     bbox=dict(boxstyle="round,pad=0.3", facecolor='white', alpha=0.8))
+        for i, row in subset.iterrows():
+            # Estratégia mais inteligente: baseado no valor do tamanho
+            # Se tamanho for par, coloca à direita; ímpar, à esquerda
+            if row['tamanho'] % 2 == 0:
+                offset_x = 18
+                ha = 'left'
+            else:
+                offset_x = -18
+                ha = 'right'
+            
+            plt.annotate(f'{row["media_trocas"]:,.0f}',
+                         xy=(row['tamanho'], row['media_trocas']),
+                         xytext=(offset_x, 0),
+                         textcoords='offset points',
+                         ha=ha,
+                         va='center',
+                         fontsize=12,
+                         fontweight='normal',
+                         bbox=dict(boxstyle="round,pad=0.15",
+                                   facecolor='white',
+                                   alpha=0.7,
+                                   edgecolor='lightgray',
+                                   linewidth=0.5))
 
     filename = f'{algoritmo_nome.lower().replace(" ", "_")}_comparacao_trocas_cenarios.png'
     plt.tight_layout()
@@ -469,6 +542,9 @@ def criar_graficos_comparativos(df_stats, output_dir, algoritmo_nome, cores_cena
     
     # Converter para arrays numpy para cálculos
     tamanhos = np.array(sorted(df_stats['tamanho'].unique()))
+    
+    # Lista para armazenar os coeficientes de complexidade
+    coefs_info = []
     
     for cenario in cenarios_unicos:
         cenario_str = str(cenario)
@@ -490,13 +566,33 @@ def criar_graficos_comparativos(df_stats, output_dir, algoritmo_nome, cores_cena
             log_tempos = np.log10(tempos)
             coef = np.polyfit(log_tamanhos, log_tempos, 1)[0]
             
-            # Anotar o coeficiente
-            last_point = subset.iloc[-1]
-            plt.annotate(f'α ≈ {coef:.2f}', 
-                         xy=(last_point['tamanho'], last_point['media_tempo_ms']),
-                         xytext=(10, 0), textcoords='offset points',
-                         ha='left', fontsize=9,
-                         bbox=dict(boxstyle="round,pad=0.3", facecolor='white', alpha=0.8))
+            # Armazenar coeficiente para legenda separada
+            coefs_info.append(f'{label}: α ≈ {coef:.2f}')
+        
+        # ADICIONAR ESTA PARTE: Anotar os valores de tempo em todos os pontos AO LADO
+        for i, row in subset.iterrows():
+            # Em escala log-log, usar offsets proporcionais
+            # Alternar entre direita e esquerda
+            if i % 2 == 0:
+                offset_x = 10  # À direita
+                ha = 'left'
+            else:
+                offset_x = -10  # À esquerda
+                ha = 'right'
+            
+            plt.annotate(f'{row["media_tempo_ms"]:.1f}',
+                         xy=(row['tamanho'], row['media_tempo_ms']),
+                         xytext=(offset_x, 0),
+                         textcoords='offset points',
+                         ha=ha,
+                         va='center',
+                         fontsize=10,  # Fonte ainda menor para gráfico log
+                         fontweight='normal',
+                         bbox=dict(boxstyle="round,pad=0.1",
+                                   facecolor='white',
+                                   alpha=0.6,
+                                   edgecolor='lightgray',
+                                   linewidth=0.3))
 
     # Linhas de referência para complexidades
     plt.loglog(tamanhos, tamanhos * np.log10(tamanhos), 'k--', linewidth=1, alpha=0.5, label='O(n log n)')
@@ -506,11 +602,29 @@ def criar_graficos_comparativos(df_stats, output_dir, algoritmo_nome, cores_cena
     plt.ylabel('Tempo Médio (ms) (escala log)', fontsize=12, fontweight='bold')
     plt.title(f'Análise de Complexidade do {algoritmo_nome}\nEscala Log-Log', 
               fontsize=14, fontweight='bold')
-    plt.legend(title='Cenário / Complexidade', title_fontsize=12, fontsize=11)
+    
+    # PRIMEIRA LEGENDA: cenários e complexidades teóricas (CANTO DIREITO - CENTRO)
+    leg1 = plt.legend(title='Cenário / Complexidade', title_fontsize=12, fontsize=11, 
+                     loc='center left', bbox_to_anchor=(1.02, 0.7))  # 70% da altura
+    
+    # SEGUNDA LEGENDA: coeficientes (CANTO DIREITO - ABAIXO da primeira)
+    if coefs_info:
+        # Criar texto formatado para a legenda
+        coef_text = "\n".join(coefs_info)
+        
+        # Adicionar como segunda legenda (não como plt.text)
+        plt.text(1.07, 0.3, f'Coeficientes α:\n{coef_text}',  # 30% da altura
+                 transform=plt.gca().transAxes,
+                 fontsize=10,
+                 verticalalignment='top',
+                 horizontalalignment='left',
+                 bbox=dict(boxstyle='round', facecolor='white', alpha=0.9, 
+                          edgecolor='gray', pad=0.5, linewidth=1))
+    
     plt.grid(True, alpha=0.3, which='both')
+    plt.tight_layout(rect=[0, 0, 0.85, 1])  # Deixa espaço à direita para as legendas
 
     filename = f'{algoritmo_nome.lower().replace(" ", "_")}_analise_complexidade.png'
-    plt.tight_layout()
     plt.savefig(output_dir / filename, dpi=300, bbox_inches='tight')
     plt.close()
     arquivos_gerados.append(filename)
