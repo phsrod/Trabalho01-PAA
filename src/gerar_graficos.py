@@ -477,58 +477,94 @@ def criar_graficos_comparativos(df_stats, output_dir, algoritmo_nome, cores_cena
     print(f"  ✅ Gráfico 5 salvo: {filename}")
 
     # Gráfico 6: Comparação de Trocas entre Cenários
+    # (com jitter vertical proporcional)
+    # ================================
+
     plt.figure(figsize=(12, 8))
-    
+
+    # Fator de jitter proporcional (1.5% do valor)
+    JITTER_FACTOR = 0.015
+
     for cenario in cenarios_unicos:
         cenario_str = str(cenario)
         subset = df_stats[df_stats['cenario'] == cenario_str].copy()
         subset = subset.sort_values('tamanho')
-        
+
         cor = cores_cenarios.get(cenario_str, 'gray')
         label = cenario_str.capitalize() if cenario_str in cores_cenarios else cenario_str
-        
-        plt.plot(subset['tamanho'], subset['media_trocas'], 
-                 marker='D', linewidth=2.5, markersize=9, 
-                 color=cor,
-                 label=label)
+
+        # Aplicação do jitter proporcional
+        if cenario_str == 'decrescente':
+            y_vals = subset['media_trocas'] * (1 + JITTER_FACTOR)
+        elif cenario_str == 'aleatorio':
+            y_vals = subset['media_trocas'] * (1 - JITTER_FACTOR)
+        else:  # crescente
+            y_vals = subset['media_trocas']
+
+        plt.plot(
+            subset['tamanho'],
+            y_vals,
+            marker='D',
+            linewidth=2.5,
+            markersize=9,
+            color=cor,
+            label=label
+        )
 
     plt.xlabel('Tamanho do Array', fontsize=12, fontweight='bold')
     plt.ylabel('Número Médio de Trocas', fontsize=12, fontweight='bold')
-    plt.title(f'Comparação de Trocas Realizadas\n{algoritmo_nome} - Todos os Cenários', 
-              fontsize=14, fontweight='bold')
+    plt.title(
+        f'Comparação de Trocas Realizadas\n{algoritmo_nome} - Todos os Cenários',
+        fontsize=14,
+        fontweight='bold'
+    )
     plt.legend(title='Cenário', title_fontsize=12, fontsize=11)
     plt.grid(True, alpha=0.3)
 
-    # Adicionar anotações com valores
-        # ADICIONAR ANOTAÇÕES COM VALORES PARA TODOS OS PONTOS AO LADO
+    # ================================
+    # Anotações dos valores (alinhadas ao jitter)
+    # ================================
+
     for cenario in cenarios_unicos:
         cenario_str = str(cenario)
         subset = df_stats[df_stats['cenario'] == cenario_str].copy()
         subset = subset.sort_values('tamanho')
-        
-        for i, row in subset.iterrows():
-            # Estratégia mais inteligente: baseado no valor do tamanho
-            # Se tamanho for par, coloca à direita; ímpar, à esquerda
-            if row['tamanho'] % 2 == 0:
-                offset_x = 18
-                ha = 'left'
+
+        for _, row in subset.iterrows():
+
+            # Mesmo jitter da curva
+            if cenario_str == 'decrescente':
+                y_plot = row['media_trocas'] * (1 + JITTER_FACTOR)
+            elif cenario_str == 'aleatorio':
+                y_plot = row['media_trocas'] * (1 - JITTER_FACTOR)
             else:
-                offset_x = -18
-                ha = 'right'
-            
-            plt.annotate(f'{row["media_trocas"]:,.0f}',
-                         xy=(row['tamanho'], row['media_trocas']),
-                         xytext=(offset_x, 0),
-                         textcoords='offset points',
-                         ha=ha,
-                         va='center',
-                         fontsize=12,
-                         fontweight='normal',
-                         bbox=dict(boxstyle="round,pad=0.15",
-                                   facecolor='white',
-                                   alpha=0.7,
-                                   edgecolor='lightgray',
-                                   linewidth=0.5))
+                y_plot = row['media_trocas']
+
+            # Definir posição da anotação conforme o cenário
+            if cenario_str == 'aleatorio':
+                offset_y = 8        # acima do ponto
+                va = 'bottom'
+            else:  # crescente e decrescente
+                offset_y = -8       # abaixo do ponto
+                va = 'top'
+
+            plt.annotate(
+                f'{row["media_trocas"]:,.0f}',
+                xy=(row['tamanho'], y_plot),
+                xytext=(0, offset_y),
+                textcoords='offset points',
+                ha='center',
+                va=va,
+                fontsize=12,
+                bbox=dict(
+                    boxstyle="round,pad=0.15",
+                    facecolor='white',
+                    alpha=0.7,
+                    edgecolor='lightgray',
+                    linewidth=0.5
+                )
+            )
+
 
     filename = f'{algoritmo_nome.lower().replace(" ", "_")}_comparacao_trocas_cenarios.png'
     plt.tight_layout()
