@@ -64,28 +64,28 @@ x -> para marcar
 ### 🧪 Testes e Coleta de Dados
 - [x] Definir tamanhos de vetores (ex: 20k, 40k, 60k)
 - [x] Criar scripts para execução automatizada dos testes
-- [ ] Executar cada cenário 5 vezes:
-  - [ ] Vetor crescente
-  - [ ] Vetor decrescente
-  - [ ] Vetor aleatório
+- [x] Executar cada cenário 5 vezes: (foram 10)
+  - [x] Vetor crescente
+  - [x] Vetor decrescente
+  - [x] Vetor aleatório
 - [x] Calcular médias dos tempos de execução
 - [x] Organizar resultados em tabelas
 
 ### 📊 Análise e Gráficos
-- [ ] Identificar pior caso prático para cada algoritmo
-- [ ] Relacionar resultados com a teoria (complexidade)
-- [ ] Discutir discrepâncias observadas
-- [ ] Gerar gráficos (tempo × tamanho da entrada) por cenário
+- [x] Identificar pior caso prático para cada algoritmo
+- [x] Relacionar resultados com a teoria (complexidade)
+- [x] Discutir discrepâncias observadas
+- [x] Gerar gráficos (tempo × tamanho da entrada) por cenário
 - [ ] Criar comparação visual direta entre os algoritmos
 
 ### 📝 Relatório Técnico
-- [ ] Introdução
-- [ ] Descrição detalhada dos algoritmos implementados
-- [ ] Análise teórica de complexidade
-- [ ] Metodologia experimental
-- [ ] Apresentação e discussão dos resultados
-- [ ] Conclusão
-- [ ] Referências bibliográficas
+- [x] Introdução
+- [x] Descrição detalhada dos algoritmos implementados
+- [x] Análise teórica de complexidade
+- [x] Metodologia experimental
+- [x] Apresentação e discussão dos resultados
+- [x] Conclusão
+- [x] Referências bibliográficas
 
 ### 🎤 Apresentação Oral
 - [ ] Preparar slides
@@ -135,8 +135,8 @@ x -> para marcar
 
 ---
 
-**📌 Atualizado em:** *[08/01/2025]*
-**✅ Progresso atual:** *[10%]*  
+**📌 Atualizado em:** *[11/01/2025]*
+**✅ Progresso atual:** *[50%]*  
 
 ---
 
