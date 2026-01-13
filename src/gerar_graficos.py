@@ -542,10 +542,10 @@ def criar_graficos_comparativos(df_stats, output_dir, algoritmo_nome, cores_cena
 
             # Definir posição da anotação conforme o cenário
             if cenario_str == 'aleatorio':
-                offset_y = 8        # acima do ponto
+                offset_y = -12        # acima do ponto
                 va = 'bottom'
             else:  # crescente e decrescente
-                offset_y = -8       # abaixo do ponto
+                offset_y = 12       # abaixo do ponto
                 va = 'top'
 
             plt.annotate(
