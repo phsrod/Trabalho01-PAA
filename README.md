@@ -88,11 +88,11 @@ x -> para marcar
 - [x] Referências bibliográficas
 
 ### 🎤 Apresentação Oral
-- [ ] Preparar slides
-- [ ] Definir roteiro da apresentação (20–40 min)
-- [ ] Preparar demonstração passo a passo com vetor pequeno
-- [ ] Distribuir falas entre os participantes
-- [ ] Realizar ensaio da apresentação
+- [x] Preparar slides
+- [x] Definir roteiro da apresentação (20–40 min)
+- [x] Preparar demonstração passo a passo com vetor pequeno
+- [x] Distribuir falas entre os participantes
+- [x] Realizar ensaio da apresentação
 
 ### 📦 Entrega Final
 - [ ] Revisar código e documentação
@@ -106,12 +106,12 @@ x -> para marcar
 
 | Etapa | Prazo | Status |
 |-------|--------|---------|
-| Implementação dos algoritmos | *[data]* | ⏳ |
-| Execução dos testes | *[data]* | ⏳ |
-| Geração de gráficos | *[data]* | ⏳ |
+| Implementação dos algoritmos | *[09/01]* | ⏳ |
+| Execução dos testes | *[09/01]* | ⏳ |
+| Geração de gráficos | *[12/01]* | ⏳ |
 | Redação do relatório | *[data]* | ⏳ |
-| Preparação da apresentação | *[data]* | ⏳ |
-| Revisão final | *[data]* | ⏳ |
+| Preparação da apresentação | *[13/01]* | ⏳ |
+| Revisão final | *[13/01]* | ⏳ |
 | Apresentação | *[13/01]* | ⏳ |
 | Entrega | *[16/01]* | ⏳ |
 
@@ -135,8 +135,8 @@ x -> para marcar
 
 ---
 
-**📌 Atualizado em:** *[11/01/2025]*
-**✅ Progresso atual:** *[50%]*  
+**📌 Atualizado em:** *[13/01/2025]*
+**✅ Progresso atual:** *[70%]*  
 
 ---
 
