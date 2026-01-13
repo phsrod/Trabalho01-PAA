@@ -36,16 +36,37 @@ Avaliar comparativamente algoritmos de ordenação, considerando desempenho, com
 
 | Item | Especificação |
 |------|---------------|
-| **Linguagem** | *[C]* |
-| **Sistema Operacional** | *[WSL]* |
-| **Hardware** | *[]* |
+| **Linguagem** | *[C e Python (Gráficos)]* |
+| **Sistema Operacional** | *[Windows 11 Home Single Language (Executado no Ubuntu 24.04.3 LTS via WSL2)]* |
+| **Hardware** | *[Processador: Core i5-12450H 12º Gen (2.00 GHz) (8 núcleos, 12 threads, 12 MB cache) Memória RAM: 16,0 GB @ 3200 MHz (utilizável: 15,7 GB)]* |
 | **IDE/Editor** | *[VSCode]* |
 
 ---
 
-## 📁 Estrutura do Projeto (a definir)
+## 📁 Estrutura do Projeto
 
+```text
+TRABALHO01-PAA/
+├── docs/                      # Documentação e enunciados do trabalho
+│   ├── Avaliação Teórica e Experiment...pdf
+│   ├── Trabalho_Algoritmos_Ordenac...pdf
+│   └── Relatório - 1º Trabalho (PAA)
+├── results/                   # Resultados das execuções e análises
+│   ├── files/                 # Arquivos de dados brutos de saída
+│   │   ├── cycleSort/
+│   │   └── shellSort/
+│   └── graphics/              # Gráficos gerados para análise comparativa
+│       ├── cycleSort/
+│       └── shellSort/
+├── src/                       # Código-fonte do projeto
+│   ├── cycleSort.c            # Implementação do algoritmo Cycle Sort
+│   ├── shellSort.c            # Implementação do algoritmo Shell Sort
+│   └── gerar_graficos.py      # Script Python para geração de visualizações
+├── .gitignore                 # Arquivos ignorados pelo Git
+├── LICENSE                    # Licença do projeto
+└── README.md                  # Documentação principal
 
+```
 ---
 
 ## ✅ Checklist de Progresso
@@ -58,7 +79,7 @@ x -> para marcar
 - [x] Implementar Algoritmo B (Grupo B)
 - [x] Criar função de geração de vetores (crescente, decrescente, aleatório)
 - [x] Implementar medição precisa de tempo de execução
-- [ ] Modularizar e documentar o código
+- [x] Modularizar e documentar o código
 - [x] Testar cada algoritmo com vetores pequenos (ex: 10 elementos)
 
 ### 🧪 Testes e Coleta de Dados
@@ -76,7 +97,7 @@ x -> para marcar
 - [x] Relacionar resultados com a teoria (complexidade)
 - [x] Discutir discrepâncias observadas
 - [x] Gerar gráficos (tempo × tamanho da entrada) por cenário
-- [ ] Criar comparação visual direta entre os algoritmos
+- [x] Criar comparação visual direta entre os algoritmos
 
 ### 📝 Relatório Técnico
 - [x] Introdução
@@ -106,13 +127,13 @@ x -> para marcar
 
 | Etapa | Prazo | Status |
 |-------|--------|---------|
-| Implementação dos algoritmos | *[09/01]* | ⏳ |
-| Execução dos testes | *[09/01]* | ⏳ |
-| Geração de gráficos | *[12/01]* | ⏳ |
+| Implementação dos algoritmos | *[09/01]* | ✅ |
+| Execução dos testes | *[09/01]* | ✅ |
+| Geração de gráficos | *[12/01]* | ✅ |
 | Redação do relatório | *[data]* | ⏳ |
-| Preparação da apresentação | *[13/01]* | ⏳ |
+| Preparação da apresentação | *[13/01]* | ✅ |
 | Revisão final | *[13/01]* | ⏳ |
-| Apresentação | *[13/01]* | ⏳ |
+| Apresentação | *[13/01]* | ✅ |
 | Entrega | *[16/01]* | ⏳ |
 
 ---
@@ -128,15 +149,14 @@ x -> para marcar
 
 ## 🔗 Links Úteis
 
-- [Modelo de relatório acadêmico](https://www.overleaf.com/project/695e6381059f34613c4a4a14)
-- [Modelo de Apresentação de Slides](https://docs.google.com/presentation/d/1gNWAoQPXcdVmxetjCAsR06dCQQXqE98gv0TWxfAHZnM/edit?usp=sharing)
-- [Ferramentas para geração de gráficos]()
-- [Material de apoio sobre algoritmos de ordenação]()
+- [Relatório Acadêmico](https://www.overleaf.com/project/695e6381059f34613c4a4a14)
+- [Apresentação de Slides](https://docs.google.com/presentation/d/1gNWAoQPXcdVmxetjCAsR06dCQQXqE98gv0TWxfAHZnM/edit?usp=sharing)
+- [Repositório](https://github.com/phsrod/Trabalho01-PAA)
 
 ---
 
 **📌 Atualizado em:** *[13/01/2025]*
-**✅ Progresso atual:** *[70%]*  
+**✅ Progresso atual:** *[90%]*  
 
 ---
 
