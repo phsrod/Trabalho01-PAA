@@ -48,7 +48,7 @@ Avaliar comparativamente algoritmos de ordenação, considerando desempenho, com
 ```text
 TRABALHO01-PAA/
 ├── docs/                      # Documentação e enunciados do trabalho
-│   ├── Avaliação Teórica e Experiment...pdf
+│   ├── Apresentação de Slides
 │   ├── Trabalho_Algoritmos_Ordenac...pdf
 │   └── Relatório - 1º Trabalho (PAA)
 ├── results/                   # Resultados das execuções e análises
@@ -116,10 +116,10 @@ x -> para marcar
 - [x] Realizar ensaio da apresentação
 
 ### 📦 Entrega Final
-- [ ] Revisar código e documentação
-- [ ] Revisar relatório
-- [ ] Consolidar todos os arquivos (código, dados, gráficos, relatório)
-- [ ] Enviar conforme orientações do professor
+- [x] Revisar código e documentação
+- [x] Revisar relatório
+- [x] Consolidar todos os arquivos (código, dados, gráficos, relatório)
+- [x] Enviar conforme orientações do professor
 
 ---
 
@@ -130,11 +130,11 @@ x -> para marcar
 | Implementação dos algoritmos | *[09/01]* | ✅ |
 | Execução dos testes | *[09/01]* | ✅ |
 | Geração de gráficos | *[12/01]* | ✅ |
-| Redação do relatório | *[data]* | ⏳ |
+| Redação do relatório | *[14/01]* | ✅ |
 | Preparação da apresentação | *[13/01]* | ✅ |
-| Revisão final | *[13/01]* | ⏳ |
+| Revisão final | *[13/01]* | ✅ |
 | Apresentação | *[13/01]* | ✅ |
-| Entrega | *[16/01]* | ⏳ |
+| Entrega | *[16/01]* | ✅ |
 
 ---
 
@@ -155,8 +155,8 @@ x -> para marcar
 
 ---
 
-**📌 Atualizado em:** *[13/01/2025]*
-**✅ Progresso atual:** *[90%]*  
+**📌 Atualizado em:** *[14/01/2025]*
+**✅ Progresso atual:** *[100%]*  
 
 ---
 
